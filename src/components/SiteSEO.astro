@@ -1,0 +1,50 @@
+---
+import { SEO, type Props as SEOProps } from "astro-seo";
+const defaultImageFile = new URL('/images/social.jpg', Astro.url);
+
+interface Props {
+  seo?: SEOProps;
+}
+
+const { seo } = Astro.props;
+
+const siteName = "Astro Starter";
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<SEO
+  title={seo?.title}
+  description={seo?.description ?? "Astro starter with Typescript and Tailwind."}
+  canonical={canonicalURL}
+  openGraph={{
+    basic: {
+      url: canonicalURL,
+      title: seo?.title ?? "Astro Starter",
+      type: "website",
+      image: defaultImageFile.toString(),
+    },
+    image: {
+      url: defaultImageFile.toString(),
+      secureUrl: defaultImageFile.toString(),
+      alt: '',
+      height: 1200,
+      width: 800,
+    },
+  }}
+  extend={{
+    meta: [
+      {
+        name: "og:locale",
+        content: "en_US",
+      },
+      {
+        name: "og:description",
+        content: seo?.description ?? "Astro starter with Typescript and Tailwind.",
+      },
+      {
+        name: "og:site_name",
+        content: siteName,
+      },
+    ],
+  }}
+/>
