@@ -156,7 +156,7 @@ const toISODateTime = (dateString: string | undefined): string | null => {
                   </thead>
                   <tbody>
                     {[...skills]
-                      .sort((a, b) => (b?.xp || 0) - (a?.xp || 0))
+                      .sort((a, b) => (b?.xp || 0) / 10 - (a?.xp || 0) / 10)
                       .map((skill) => (
                         <tr class="border-b border-gray-100 hover:bg-gray-50">
                           <td class="py-3 px-4 font-medium">
@@ -167,7 +167,7 @@ const toISODateTime = (dateString: string | undefined): string | null => {
                             {skill?.level || 0}
                           </td>
                           <td class="text-right py-3 px-4">
-                            {(skill?.xp || 0).toLocaleString()}
+                            {Math.floor((skill?.xp || 0) / 10).toLocaleString()}
                           </td>
                           <td class="text-right py-3 px-4">
                             {(skill?.rank || 0).toLocaleString()}
