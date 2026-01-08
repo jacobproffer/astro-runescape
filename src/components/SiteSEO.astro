@@ -1,6 +1,6 @@
 ---
 import { SEO, type Props as SEOProps } from "astro-seo";
-const defaultImageFile = new URL('/images/social.jpg', Astro.url);
+const defaultImageFile = new URL("/images/social.jpg", Astro.url);
 
 interface Props {
   seo?: SEOProps;
@@ -8,25 +8,27 @@ interface Props {
 
 const { seo } = Astro.props;
 
-const siteName = "Astro Starter";
+const siteName = "Apone";
+const siteDescription =
+  "Created in October of 2003, Apone is a character in the game RuneScape.";
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <SEO
   title={seo?.title}
-  description={seo?.description ?? "Astro starter with Typescript and Tailwind."}
+  description={seo?.description ?? siteDescription}
   canonical={canonicalURL}
   openGraph={{
     basic: {
       url: canonicalURL,
-      title: seo?.title ?? "Astro Starter",
+      title: seo?.title ?? "Apone",
       type: "website",
       image: defaultImageFile.toString(),
     },
     image: {
       url: defaultImageFile.toString(),
       secureUrl: defaultImageFile.toString(),
-      alt: '',
+      alt: "",
       height: 1200,
       width: 800,
     },
@@ -39,7 +41,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       },
       {
         name: "og:description",
-        content: seo?.description ?? "Astro starter with Typescript and Tailwind.",
+        content: seo?.description ?? siteDescription,
       },
       {
         name: "og:site_name",
