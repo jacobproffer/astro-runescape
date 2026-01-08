@@ -54,12 +54,25 @@ const activities = profile?.activities || [];
 
 // Helper function to format XP values in activity text
 const formatActivityText = (text: string | undefined): string => {
-  if (!text) return "Unknown activity";
+  if (!text) return "";
   // Match patterns like "92000000XP" and format with commas
   // Also format standalone numbers with 4+ digits
   return text.replace(/(\d{4,})/g, (match) => {
-    return parseInt(match).toLocaleString();
+    return parseInt(match, 10).toLocaleString();
   });
+};
+
+// Helper function to convert date strings to ISO 8601 format for datetime attributes
+const toISODateTime = (dateString: string | undefined): string | null => {
+  if (!dateString) return null;
+  try {
+    const date = new Date(dateString);
+    // Check if the date is valid
+    if (isNaN(date.getTime())) return null;
+    return date.toISOString();
+  } catch {
+    return null;
+  }
 };
 ---
 
@@ -186,7 +199,7 @@ const formatActivityText = (text: string | undefined): string => {
                     </p>
                     {activity?.date && (
                       <time
-                        datetime={activity.date}
+                        datetime={toISODateTime(activity.date) || undefined}
                         class="text-gray-400 text-xs block"
                       >
                         {activity.date}
