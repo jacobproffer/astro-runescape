@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Hero from "@components/Hero.astro";
+import SkillsTable from "@components/SkillsTable.astro";
 import type { RuneMetricsProfile } from "@/types/runescape";
 import { SKILL_NAMES } from "@/types/runescape";
 
@@ -94,11 +95,11 @@ const toISODateTime = (dateString: string | undefined): string | null => {
 
   {
     profile && (
-      <section class="py-12">
+      <section>
         <div class="container mx-auto px-4">
           {/* Player Stats Overview */}
-          <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-            <h2 class="text-3xl font-bold mb-6">Player Stats</h2>
+          <div class="p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-6 text-yellow">Player Stats</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div class="text-center p-4 bg-gray-50 rounded">
                 <div class="text-4xl font-bold text-blue-600">
@@ -141,51 +142,10 @@ const toISODateTime = (dateString: string | undefined): string | null => {
           </div>
 
           {/* Skills Table */}
-          <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-            <h2 class="text-3xl font-bold mb-6">Skills</h2>
-            {skills.length > 0 ? (
-              <div class="overflow-x-auto">
-                <table class="w-full">
-                  <thead>
-                    <tr class="border-b-2 border-gray-200">
-                      <th class="text-left py-3 px-4">Skill</th>
-                      <th class="text-right py-3 px-4">Level</th>
-                      <th class="text-right py-3 px-4">XP</th>
-                      <th class="text-right py-3 px-4">Rank</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[...skills]
-                      .sort((a, b) => (b?.xp || 0) / 10 - (a?.xp || 0) / 10)
-                      .map((skill) => (
-                        <tr class="border-b border-gray-100 hover:bg-gray-50">
-                          <td class="py-3 px-4 font-medium">
-                            {SKILL_NAMES[skill?.id] ||
-                              `Skill ${skill?.id || "Unknown"}`}
-                          </td>
-                          <td class="text-right py-3 px-4">
-                            {skill?.level || 0}
-                          </td>
-                          <td class="text-right py-3 px-4">
-                            {Math.floor((skill?.xp || 0) / 10).toLocaleString()}
-                          </td>
-                          <td class="text-right py-3 px-4">
-                            {(skill?.rank || 0).toLocaleString()}
-                          </td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <p class="text-gray-500 text-center py-4">
-                No skill data available
-              </p>
-            )}
-          </div>
+          <SkillsTable skills={skills} />
 
           {/* Recent Activities */}
-          <div class="bg-white rounded-lg shadow-lg p-6">
+          <div class="p-6">
             <h2 class="text-3xl font-bold mb-6">Recent Activities</h2>
             {activities.length > 0 ? (
               <div class="space-y-4">

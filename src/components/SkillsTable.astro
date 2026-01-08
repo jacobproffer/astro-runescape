@@ -1,0 +1,55 @@
+---
+import type { RuneMetricsProfile } from "@/types/runescape";
+import { SKILL_NAMES } from "@/types/runescape";
+
+interface Props {
+  skills: RuneMetricsProfile["skillvalues"];
+}
+
+const { skills } = Astro.props;
+---
+
+<section>
+  <div class="p-4 bg-gray outline outline-gray -outline-offset-1">
+    <h2 class="text-3xl text-yellow font-bold">Skills</h2>
+  </div>
+  {
+    skills.length > 0 ? (
+      <div class="overflow-x-auto">
+        <table class="w-full border-separate border-spacing-y-0.75">
+          <thead>
+            <tr class="bg-gray outline outline-gray -outline-offset-1">
+              <th class="text-yellow text-left py-3 px-4">Skill</th>
+              <th class="text-yellow text-right py-3 px-4">Level</th>
+              <th class="text-yellow text-right py-3 px-4">XP</th>
+              <th class="text-yellow text-right py-3 px-4">Rank</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[...skills]
+              .sort((a, b) => (b?.xp || 0) / 10 - (a?.xp || 0) / 10)
+              .map((skill, index) => (
+                <tr
+                  class={`text-gray-300 outline outline-gray -outline-offset-1 bg-no-repeat bg-left bg-cover shadow-[0_-4px_5px_-1px_#000,0_4px_5px_-1px_#000] ${index % 2 === 0 ? "bg-purple-100" : "bg-purple-200"}`}
+                >
+                  <td class="py-3 px-4 text-yellow font-medium">
+                    {SKILL_NAMES[skill?.id] ||
+                      `Skill ${skill?.id || "Unknown"}`}
+                  </td>
+                  <td class="text-right py-3 px-4">{skill?.level || 0}</td>
+                  <td class="text-right py-3 px-4">
+                    {Math.floor((skill?.xp || 0) / 10).toLocaleString()}
+                  </td>
+                  <td class="text-right py-3 px-4">
+                    {(skill?.rank || 0).toLocaleString()}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+    ) : (
+      <p class="text-gray-500 text-center py-4">No skill data available</p>
+    )
+  }
+</section>
