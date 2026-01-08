@@ -51,6 +51,16 @@ try {
 const pageTitle = profile?.name || CHARACTER_NAME;
 const skills = profile?.skillvalues || [];
 const activities = profile?.activities || [];
+
+// Helper function to format XP values in activity text
+const formatActivityText = (text: string | undefined): string => {
+  if (!text) return "Unknown activity";
+  // Match patterns like "92000000XP" and format with commas
+  // Also format standalone numbers with 4+ digits
+  return text.replace(/(\d{4,})/g, (match) => {
+    return parseInt(match).toLocaleString();
+  });
+};
 ---
 
 <BaseLayout pageTitle={pageTitle}>
@@ -168,15 +178,20 @@ const activities = profile?.activities || [];
               <div class="space-y-4">
                 {activities.map((activity) => (
                   <div class="border-l-4 border-blue-500 pl-4 py-2">
-                    <div class="font-semibold text-lg">
-                      {activity?.text || "Unknown activity"}
-                    </div>
-                    <div class="text-gray-600 text-sm">
-                      {activity?.details || ""}
-                    </div>
-                    <div class="text-gray-400 text-xs mt-1">
-                      {activity?.date || ""}
-                    </div>
+                    <h3 class="font-semibold text-lg">
+                      {formatActivityText(activity?.text)}
+                    </h3>
+                    <p class="text-gray-600 text-sm">
+                      {formatActivityText(activity?.details)}
+                    </p>
+                    {activity?.date && (
+                      <time
+                        datetime={activity.date}
+                        class="text-gray-400 text-xs block"
+                      >
+                        {activity.date}
+                      </time>
+                    )}
                   </div>
                 ))}
               </div>
