@@ -1,4 +1,4 @@
-# Astro Starter
+# RuneScape Character Website
 
 Made with Astro and Tailwind.
 
