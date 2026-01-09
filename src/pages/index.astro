@@ -4,6 +4,7 @@ import Hero from "@components/Hero.astro";
 import PlayerStats from "@components/PlayerStats.astro";
 import SkillsTable from "@components/SkillsTable.astro";
 import RecentActivities from "@components/RecentActivities.astro";
+import DataLoader from "@components/DataLoader.astro";
 import type { RuneMetricsProfile } from "@/types/runescape";
 
 const CHARACTER_NAME = import.meta.env.PUBLIC_CHARACTER_NAME || "Apone";
@@ -71,18 +72,20 @@ const activities = profile?.activities || [];
 
   {
     profile && (
-      <div class="container mx-auto px-4">
-        <Hero headline={pageTitle} />
+      <DataLoader>
+        <div class="container mx-auto px-4">
+          <Hero headline={pageTitle} />
 
-        {/* Player Stats Overview */}
-        <PlayerStats profile={profile} />
+          {/* Player Stats Overview */}
+          <PlayerStats profile={profile} />
 
-        {/* Skills Table */}
-        <SkillsTable skills={skills} />
+          {/* Skills Table */}
+          <SkillsTable skills={skills} />
 
-        {/* Recent Activities */}
-        <RecentActivities activities={activities} />
-      </div>
+          {/* Recent Activities */}
+          <RecentActivities activities={activities} />
+        </div>
+      </DataLoader>
     )
   }
 </BaseLayout>

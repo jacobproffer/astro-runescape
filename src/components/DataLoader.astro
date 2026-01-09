@@ -1,0 +1,34 @@
+---
+import LoadingSpinner from "@components/LoadingSpinner.astro";
+---
+
+<div id="data-loader">
+  <div id="loading-state">
+    <LoadingSpinner message="Fetching player stats from RuneScape..." />
+  </div>
+  <div id="content-state" style="display: none;">
+    <slot />
+  </div>
+</div>
+
+<script>
+  // Show content immediately when the page loads (content is already fetched server-side)
+  // Add a small delay to show the loader briefly for user feedback
+  const minLoadTime = 500; // 500ms minimum to show loader
+  const startTime = performance.now();
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const elapsed = performance.now() - startTime;
+    const remainingTime = Math.max(0, minLoadTime - elapsed);
+
+    setTimeout(() => {
+      const loadingState = document.getElementById("loading-state");
+      const contentState = document.getElementById("content-state");
+
+      if (loadingState && contentState) {
+        loadingState.style.display = "none";
+        contentState.style.display = "block";
+      }
+    }, remainingTime);
+  });
+</script>
