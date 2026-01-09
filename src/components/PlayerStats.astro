@@ -1,5 +1,6 @@
 ---
 import type { RuneMetricsProfile } from "@/types/runescape";
+import Divider from "@components/Divider.astro";
 
 interface Props {
   profile: RuneMetricsProfile;
@@ -9,7 +10,7 @@ const { profile } = Astro.props;
 ---
 
 <section>
-  <h2 class="text-3xl font-family-cinzel font-bold uppercase mb-6 text-yellow">
+  <h2 class="text-3xl font-cinzel font-bold uppercase mb-6 text-yellow">
     Player Stats
   </h2>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -51,4 +52,5 @@ const { profile } = Astro.props;
       <div class="text-gray-600 text-sm">Status</div>
     </div>
   </div>
+  <Divider loading="eager" />
 </section>

@@ -1,0 +1,12 @@
+---
+import { Image } from "astro:assets";
+import divider from "@assets/img/divider.jpg";
+
+interface Props {
+  loading?: "eager" | "lazy";
+}
+
+const { loading = "lazy" } = Astro.props;
+---
+
+<Image class="block w-full" src={divider} alt="" loading={loading} />
