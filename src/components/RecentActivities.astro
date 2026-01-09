@@ -32,31 +32,37 @@ const toISODateTime = (dateString: string | undefined): string | null => {
 ---
 
 <section>
-  <h2 class="text-yellow text-3xl font-family-cinzel font-bold mb-6 uppercase">
-    Recent Activities
-  </h2>
+  <div class="p-4 bg-purple-200 outline outline-gray -outline-offset-1">
+    <h2 class="text-yellow text-3xl font-family-cinzel font-bold uppercase">
+      Recent Activities
+    </h2>
+  </div>
   {
     activities.length > 0 ? (
-      <div class="space-y-4">
-        {activities.map((activity) => (
-          <div class="border-l-4 border-blue-500 pl-4 py-2">
-            <h3 class="text-yellow font-semibold text-lg">
-              {formatActivityText(activity?.text)}
-            </h3>
-            <p class="text-gray-600 text-sm">
-              {formatActivityText(activity?.details)}
-            </p>
+      <ol class="flex flex-col gap-0.5">
+        {activities.map((activity, index) => (
+          <li
+            class={`flex items-center justify-between p-4 text-gray-300 outline outline-gray -outline-offset-1 bg-no-repeat bg-left bg-cover shadow-[0_-4px_5px_-1px_#000,0_4px_5px_-1px_#000] ${index % 2 === 0 ? "bg-purple-100" : "bg-purple-200"}`}
+          >
+            <div class="flex flex-col gap-1">
+              <h3 class="text-yellow font-semibold text-lg">
+                {formatActivityText(activity?.text)}
+              </h3>
+              <p class="text-gray-300 text-sm">
+                {formatActivityText(activity?.details)}
+              </p>
+            </div>
             {activity?.date && (
               <time
                 datetime={toISODateTime(activity.date) || undefined}
-                class="text-gray-400 text-xs block"
+                class="text-gray-300 text-xs block"
               >
                 {activity.date}
               </time>
             )}
-          </div>
+          </li>
         ))}
-      </div>
+      </ol>
     ) : (
       <p class="text-gray-500 text-center py-4">No recent activities</p>
     )
