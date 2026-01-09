@@ -1,6 +1,4 @@
 ---
-import Container from "@components/Container.astro";
-
 interface Props {
   headline: string;
 }
@@ -9,12 +7,12 @@ const { headline } = Astro.props;
 ---
 
 <section>
-  <Container>
-    {
-      headline && (
-        <h1 class="font-medium text-xl leading-8 text-balance">{headline}</h1>
-      )
-    }
-    <slot />
-  </Container>
+  {
+    headline && (
+      <h1 class="font-medium text-6xl text-yellow font-family-cinzel text-balance">
+        {headline}
+      </h1>
+    )
+  }
+  <slot />
 </section>

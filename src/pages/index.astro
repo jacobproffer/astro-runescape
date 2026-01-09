@@ -1,9 +1,10 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Hero from "@components/Hero.astro";
+import PlayerStats from "@components/PlayerStats.astro";
 import SkillsTable from "@components/SkillsTable.astro";
+import RecentActivities from "@components/RecentActivities.astro";
 import type { RuneMetricsProfile } from "@/types/runescape";
-import { SKILL_NAMES } from "@/types/runescape";
 
 const CHARACTER_NAME = import.meta.env.PUBLIC_CHARACTER_NAME || "Apone";
 
@@ -52,34 +53,9 @@ try {
 const pageTitle = profile?.name || CHARACTER_NAME;
 const skills = profile?.skillvalues || [];
 const activities = profile?.activities || [];
-
-// Helper function to format XP values in activity text
-const formatActivityText = (text: string | undefined): string => {
-  if (!text) return "";
-  // Match patterns like "92000000XP" and format with commas
-  // Also format standalone numbers with 4+ digits
-  return text.replace(/(\d{4,})/g, (match) => {
-    return parseInt(match, 10).toLocaleString();
-  });
-};
-
-// Helper function to convert date strings to ISO 8601 format for datetime attributes
-const toISODateTime = (dateString: string | undefined): string | null => {
-  if (!dateString) return null;
-  try {
-    const date = new Date(dateString);
-    // Check if the date is valid
-    if (isNaN(date.getTime())) return null;
-    return date.toISOString();
-  } catch {
-    return null;
-  }
-};
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  <Hero headline={pageTitle} />
-
   {
     error && (
       <section class="py-12">
@@ -95,85 +71,18 @@ const toISODateTime = (dateString: string | undefined): string | null => {
 
   {
     profile && (
-      <section>
-        <div class="container mx-auto px-4">
-          {/* Player Stats Overview */}
-          <div class="p-6 mb-8">
-            <h2 class="text-3xl font-bold mb-6 text-yellow">Player Stats</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div class="text-center p-4 bg-gray-50 rounded">
-                <div class="text-4xl font-bold text-blue-600">
-                  {profile.combatlevel ?? 0}
-                </div>
-                <div class="text-gray-600 mt-2">Combat Level</div>
-              </div>
-              <div class="text-center p-4 bg-gray-50 rounded">
-                <div class="text-4xl font-bold text-green-600">
-                  {profile.totalskill ?? 0}
-                </div>
-                <div class="text-gray-600 mt-2">Total Skill Level</div>
-              </div>
-              <div class="text-center p-4 bg-gray-50 rounded">
-                <div class="text-4xl font-bold text-purple-600">
-                  {(profile.totalxp ?? 0).toLocaleString()}
-                </div>
-                <div class="text-gray-600 mt-2">Total XP</div>
-              </div>
-            </div>
+      <div class="flex flex-col gap-8 container mx-auto px-4">
+        <Hero headline={pageTitle} />
 
-            <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div class="text-center p-3 bg-gray-50 rounded">
-                <div class="text-2xl font-bold">
-                  {profile.questscomplete ?? 0}
-                </div>
-                <div class="text-gray-600 text-sm">Quests Complete</div>
-              </div>
-              <div class="text-center p-3 bg-gray-50 rounded">
-                <div class="text-2xl font-bold">{profile.rank ?? "N/A"}</div>
-                <div class="text-gray-600 text-sm">Overall Rank</div>
-              </div>
-              <div class="text-center p-3 bg-gray-50 rounded">
-                <div class="text-2xl font-bold">
-                  {profile.loggedIn === "true" ? "Online" : "Offline"}
-                </div>
-                <div class="text-gray-600 text-sm">Status</div>
-              </div>
-            </div>
-          </div>
+        {/* Player Stats Overview */}
+        <PlayerStats profile={profile} />
 
-          {/* Skills Table */}
-          <SkillsTable skills={skills} />
+        {/* Skills Table */}
+        <SkillsTable skills={skills} />
 
-          {/* Recent Activities */}
-          <div class="p-6">
-            <h2 class="text-3xl font-bold mb-6">Recent Activities</h2>
-            {activities.length > 0 ? (
-              <div class="space-y-4">
-                {activities.map((activity) => (
-                  <div class="border-l-4 border-blue-500 pl-4 py-2">
-                    <h3 class="font-semibold text-lg">
-                      {formatActivityText(activity?.text)}
-                    </h3>
-                    <p class="text-gray-600 text-sm">
-                      {formatActivityText(activity?.details)}
-                    </p>
-                    {activity?.date && (
-                      <time
-                        datetime={toISODateTime(activity.date) || undefined}
-                        class="text-gray-400 text-xs block"
-                      >
-                        {activity.date}
-                      </time>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p class="text-gray-500 text-center py-4">No recent activities</p>
-            )}
-          </div>
-        </div>
-      </section>
+        {/* Recent Activities */}
+        <RecentActivities activities={activities} />
+      </div>
     )
   }
 </BaseLayout>

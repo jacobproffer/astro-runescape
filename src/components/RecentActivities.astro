@@ -1,0 +1,64 @@
+---
+import type { RuneMetricsProfile } from "@/types/runescape";
+
+interface Props {
+  activities: RuneMetricsProfile["activities"];
+}
+
+const { activities } = Astro.props;
+
+// Helper function to format XP values in activity text
+const formatActivityText = (text: string | undefined): string => {
+  if (!text) return "";
+  // Match patterns like "92000000XP" and format with commas
+  // Also format standalone numbers with 4+ digits
+  return text.replace(/(\d{4,})/g, (match) => {
+    return parseInt(match, 10).toLocaleString();
+  });
+};
+
+// Helper function to convert date strings to ISO 8601 format for datetime attributes
+const toISODateTime = (dateString: string | undefined): string | null => {
+  if (!dateString) return null;
+  try {
+    const date = new Date(dateString);
+    // Check if the date is valid
+    if (isNaN(date.getTime())) return null;
+    return date.toISOString();
+  } catch {
+    return null;
+  }
+};
+---
+
+<section>
+  <h2 class="text-yellow text-3xl font-family-cinzel font-bold mb-6 uppercase">
+    Recent Activities
+  </h2>
+  {
+    activities.length > 0 ? (
+      <div class="space-y-4">
+        {activities.map((activity) => (
+          <div class="border-l-4 border-blue-500 pl-4 py-2">
+            <h3 class="text-yellow font-semibold text-lg">
+              {formatActivityText(activity?.text)}
+            </h3>
+            <p class="text-gray-600 text-sm">
+              {formatActivityText(activity?.details)}
+            </p>
+            {activity?.date && (
+              <time
+                datetime={toISODateTime(activity.date) || undefined}
+                class="text-gray-400 text-xs block"
+              >
+                {activity.date}
+              </time>
+            )}
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p class="text-gray-500 text-center py-4">No recent activities</p>
+    )
+  }
+</section>

@@ -1,9 +1,14 @@
 @import "tailwindcss";
 
+/* Import variable Cinzel font - supports weights 400-900 in a single file */
+@import "@fontsource-variable/cinzel";
+
 @theme {
   --color-purple-100: #1a252b;
   --color-purple-200: #182128;
   --color-purple-300: #050c12;
   --color-gray: #2c373b;
   --color-yellow: #e1bb34;
+
+  --font-family-cinzel: "Cinzel", serif;
 }
