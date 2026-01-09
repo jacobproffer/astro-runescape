@@ -1,4 +1,26 @@
 ---
+/**
+ * RecentActivities Component
+ *
+ * Displays a chronological list of a player's recent in-game activities, including
+ * achievements, level-ups, and other milestones. Activity text is automatically formatted
+ * to include thousand separators for XP values, and dates are displayed in a semantic
+ * HTML5 time element.
+ *
+ * @component
+ * @example
+ * ```astro
+ * <RecentActivities activities={profile.activities} />
+ * ```
+ *
+ * @prop {RuneMetricsProfile["activities"]} activities - Array of activity objects containing:
+ *   - text: Main activity description (e.g., "I leveled up my Attack skill")
+ *   - details: Additional details about the activity (e.g., "92000000XP in total")
+ *   - date: Date string when the activity occurred
+ *
+ * @note Large numbers in activity text (4+ digits) are automatically formatted with
+ *   locale-appropriate thousand separators for better readability.
+ */
 import type { RuneMetricsProfile } from "@/types/runescape";
 
 interface Props {

@@ -1,4 +1,25 @@
 ---
+/**
+ * PlayerStats Component
+ *
+ * Displays a player's key statistics in a visually organized grid layout.
+ * This component shows combat level, total skill level, total XP, quests completed,
+ * overall rank, and current online status.
+ *
+ * @component
+ * @example
+ * ```astro
+ * <PlayerStats profile={playerProfile} />
+ * ```
+ *
+ * @prop {RuneMetricsProfile} profile - The player's RuneMetrics profile data containing
+ *   - combatlevel: The player's combat level
+ *   - totalskill: Sum of all skill levels
+ *   - totalxp: Total experience points across all skills
+ *   - questscomplete: Number of completed quests
+ *   - rank: Overall player ranking
+ *   - loggedIn: String "true" or "false" indicating online status
+ */
 import type { RuneMetricsProfile } from "@/types/runescape";
 import Divider from "@components/Divider.astro";
 

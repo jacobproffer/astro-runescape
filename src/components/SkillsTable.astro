@@ -1,4 +1,26 @@
 ---
+/**
+ * SkillsTable Component
+ *
+ * Renders a sortable table displaying all of a player's RuneScape skills with their
+ * levels, experience points, and rankings. Skills are automatically sorted by XP in
+ * descending order. The table features alternating row colors for better readability.
+ *
+ * @component
+ * @example
+ * ```astro
+ * <SkillsTable skills={profile.skillvalues} />
+ * ```
+ *
+ * @prop {RuneMetricsProfile["skillvalues"]} skills - Array of skill objects containing:
+ *   - id: Numeric identifier for the skill
+ *   - level: Current skill level (1-99 or 1-120 for elite skills)
+ *   - xp: Experience points in the skill (stored as value * 10)
+ *   - rank: Player's ranking for this specific skill
+ *
+ * @note Skills are displayed in descending order by XP. XP values are divided by 10
+ *   for display as the API returns them multiplied by 10.
+ */
 import type { RuneMetricsProfile } from "@/types/runescape";
 import { SKILL_NAMES } from "@/types/runescape";
 import Divider from "@components/Divider.astro";
