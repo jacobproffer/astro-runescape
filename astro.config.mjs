@@ -22,7 +22,7 @@ export default defineConfig({
   },
   vite: {
     // @ts-ignore - Vite version mismatch between Astro and @tailwindcss/vite
-    plugins: [...tailwindcss()],
+    plugins: tailwindcss(),
     build: {
       // Improve build performance
       rollupOptions: {
