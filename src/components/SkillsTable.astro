@@ -33,7 +33,7 @@ const { skills } = Astro.props;
 ---
 
 <section>
-  <div class="p-4 bg-purple-100 outline outline-gray -outline-offset-1">
+  <div class="p-4 bg-navy-100 outline outline-gray -outline-offset-1">
     <h2 class="text-3xl text-yellow font-cinzel uppercase font-bold">Skills</h2>
   </div>
   {
@@ -41,7 +41,7 @@ const { skills } = Astro.props;
       <div class="overflow-x-auto">
         <table class="w-full border-separate border-spacing-y-0.75">
           <thead>
-            <tr class="bg-purple-200 outline outline-gray -outline-offset-1">
+            <tr class="bg-navy-200 outline outline-gray -outline-offset-1">
               <th class="text-yellow text-left py-3 px-4">Skill</th>
               <th class="text-yellow text-right py-3 px-4">Level</th>
               <th class="text-yellow text-right py-3 px-4">XP</th>
@@ -53,7 +53,7 @@ const { skills } = Astro.props;
               .sort((a, b) => (b?.xp || 0) / 10 - (a?.xp || 0) / 10)
               .map((skill, index) => (
                 <tr
-                  class={`text-gray-300 outline outline-gray -outline-offset-1 shadow-vertical-soft ${index % 2 === 0 ? "bg-purple-100" : "bg-purple-200"}`}
+                  class={`text-gray-300 outline outline-gray -outline-offset-1 shadow-vertical-soft ${index % 2 === 0 ? "bg-navy-100" : "bg-navy-200"}`}
                 >
                   <td class="py-3 px-4 text-yellow font-medium">
                     {SKILL_NAMES[skill?.id] ||

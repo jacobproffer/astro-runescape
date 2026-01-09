@@ -1,4 +1,27 @@
 ---
+/**
+ * DataLoader Component
+ *
+ * Provides a loading state wrapper that displays a loading spinner while content is being
+ * prepared, then smoothly transitions to show the actual content. Despite the content being
+ * server-side rendered (SSR), this component ensures a minimum loading time for better UX,
+ * preventing jarring instant displays and providing visual feedback to users.
+ *
+ * @component
+ * @example
+ * ```astro
+ * <DataLoader>
+ *   <PlayerStats profile={playerProfile} />
+ *   <SkillsTable skills={profile.skillvalues} />
+ * </DataLoader>
+ * ```
+ *
+ * @slot default - The content to display after the loading state completes
+ *
+ * @note The component enforces a minimum 500ms loading display to ensure users see
+ *   the loading state, even when server-side rendering is very fast. This prevents
+ *   a jarring flash of content.
+ */
 import LoadingSpinner from "@components/LoadingSpinner.astro";
 ---
 
