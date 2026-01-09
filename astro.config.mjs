@@ -21,7 +21,9 @@ export default defineConfig({
     checkOrigin: true,
   },
   vite: {
-    plugins: [tailwindcss()], build: {
+    // @ts-ignore - Vite version mismatch between Astro and @tailwindcss/vite
+    plugins: [...tailwindcss()],
+    build: {
       // Improve build performance
       rollupOptions: {
         output: {
