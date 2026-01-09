@@ -31,7 +31,7 @@ const { skills } = Astro.props;
               .sort((a, b) => (b?.xp || 0) / 10 - (a?.xp || 0) / 10)
               .map((skill, index) => (
                 <tr
-                  class={`text-gray-300 outline outline-gray -outline-offset-1 shadow-[0_-4px_5px_-1px_#000,0_4px_5px_-1px_#000] ${index % 2 === 0 ? "bg-purple-100" : "bg-purple-200"}`}
+                  class={`text-gray-300 outline outline-gray -outline-offset-1 shadow-vertical-soft ${index % 2 === 0 ? "bg-purple-100" : "bg-purple-200"}`}
                 >
                   <td class="py-3 px-4 text-yellow font-medium">
                     {SKILL_NAMES[skill?.id] ||

@@ -42,7 +42,7 @@ const toISODateTime = (dateString: string | undefined): string | null => {
       <ol class="flex flex-col gap-0.75">
         {activities.map((activity, index) => (
           <li
-            class={`flex max-md:flex-col md:items-center justify-between p-4 text-gray-300 outline outline-gray -outline-offset-1 shadow-[0_-4px_5px_-1px_#000,0_4px_5px_-1px_#000] ${index % 2 === 0 ? "bg-purple-100" : "bg-purple-200"}`}
+            class={`flex max-md:flex-col md:items-center justify-between p-4 text-gray-300 outline outline-gray -outline-offset-1 shadow-vertical-soft ${index % 2 === 0 ? "bg-purple-100" : "bg-purple-200"}`}
           >
             <div class="flex flex-col gap-1">
               <h3 class="text-yellow font-semibold text-lg">
