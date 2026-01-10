@@ -2,56 +2,296 @@
 /**
  * DataLoader Component
  *
- * Provides a loading state wrapper that displays a loading spinner while content is being
- * prepared, then smoothly transitions to show the actual content. Despite the content being
- * server-side rendered (SSR), this component ensures a minimum loading time for better UX,
- * preventing jarring instant displays and providing visual feedback to users.
+ * Fetches player data client-side and displays a loading spinner while waiting for the API response.
+ * The page loads instantly, then fetches data from the RuneScape API via our backend endpoint.
  *
  * @component
- * @example
- * ```astro
- * <DataLoader>
- *   <PlayerStats profile={playerProfile} />
- *   <SkillsTable skills={profile.skillvalues} />
- * </DataLoader>
- * ```
- *
- * @slot default - The content to display after the loading state completes
- *
- * @note The component enforces a minimum 500ms loading display to ensure users see
- *   the loading state, even when server-side rendering is very fast. This prevents
- *   a jarring flash of content.
+ * @prop {string} characterName - The RuneScape character name to fetch data for
  */
 import LoadingSpinner from "@components/LoadingSpinner.astro";
+import Divider from "@components/Divider.astro";
+
+const { characterName } = Astro.props;
 ---
 
 <div id="data-loader">
   <div id="loading-state">
     <LoadingSpinner message="Fetching player stats from RuneScape..." />
   </div>
+
+  <div id="error-state" style="display: none;">
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <div
+          class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"
+        >
+          <strong class="font-bold">Error:</strong>
+          <span class="block sm:inline" id="error-message"></span>
+        </div>
+      </div>
+    </section>
+  </div>
+
   <div id="content-state" style="display: none;">
-    <slot />
+    <div class="container mx-auto px-4">
+      <!-- Hero -->
+      <section class="py-8">
+        <h1
+          id="hero-title"
+          class="text-5xl font-cinzel font-bold text-center text-yellow uppercase"
+        >
+          {characterName}
+        </h1>
+      </section>
+
+      <!-- Player Stats -->
+      <section id="player-stats-section">
+        <h2 class="text-3xl font-cinzel font-bold uppercase mb-6 text-yellow">
+          Player Stats
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="text-center p-4 bg-gray-50 rounded">
+            <div class="text-4xl font-bold" id="stat-combat-level">0</div>
+            <div class="text-gray-600 mt-2">Combat Level</div>
+          </div>
+          <div class="text-center p-4 bg-gray-50 rounded">
+            <div class="text-4xl font-bold" id="stat-total-level">0</div>
+            <div class="text-gray-600 mt-2">Total Skill Level</div>
+          </div>
+          <div class="text-center p-4 bg-gray-50 rounded">
+            <div class="text-4xl font-bold" id="stat-total-xp">0</div>
+            <div class="text-gray-600 mt-2">Total XP</div>
+          </div>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="text-center p-3 bg-gray-50 rounded">
+            <div class="text-2xl font-bold" id="stat-quests">0</div>
+            <div class="text-gray-600 text-sm">Quests Complete</div>
+          </div>
+          <div class="text-center p-3 bg-gray-50 rounded">
+            <div class="text-2xl font-bold" id="stat-rank">N/A</div>
+            <div class="text-gray-600 text-sm">Overall Rank</div>
+          </div>
+          <div class="text-center p-3 bg-gray-50 rounded">
+            <div class="text-2xl font-bold" id="stat-status">Offline</div>
+            <div class="text-gray-600 text-sm">Status</div>
+          </div>
+        </div>
+        <Divider loading="eager" />
+      </section>
+
+      <!-- Skills Table -->
+      <section id="skills-section">
+        <div class="p-4 bg-navy-100 outline outline-gray -outline-offset-1">
+          <h2 class="text-3xl text-yellow font-cinzel uppercase font-bold">
+            Skills
+          </h2>
+        </div>
+        <div class="overflow-x-auto -mb-0.75">
+          <table class="w-full border-separate border-spacing-y-0.75">
+            <thead>
+              <tr class="bg-navy-200 outline outline-gray -outline-offset-1">
+                <th class="text-yellow text-left py-3 px-4">Skill</th>
+                <th class="text-yellow text-right py-3 px-4">Level</th>
+                <th class="text-yellow text-right py-3 px-4">XP</th>
+                <th class="text-yellow text-right py-3 px-4">Rank</th>
+              </tr>
+            </thead>
+            <tbody id="skills-tbody"></tbody>
+          </table>
+        </div>
+        <Divider loading="lazy" />
+      </section>
+
+      <!-- Recent Activities -->
+      <section class="flex flex-col gap-0.75" id="activities-section">
+        <div class="p-4 bg-navy-200 outline outline-gray -outline-offset-1">
+          <h2 class="text-yellow text-3xl font-cinzel font-bold uppercase">
+            Recent Activities
+          </h2>
+        </div>
+        <ol class="flex flex-col gap-0.75" id="activities-list"></ol>
+      </section>
+    </div>
   </div>
 </div>
 
-<script>
-  // Show content immediately when the page loads (content is already fetched server-side)
-  // Add a small delay to show the loader briefly for user feedback
-  const minLoadTime = 500; // 500ms minimum to show loader
-  const startTime = performance.now();
+<script define:vars={{ characterName }}>
+  const SKILL_NAMES = {
+    0: "Attack",
+    1: "Defence",
+    2: "Strength",
+    3: "Constitution",
+    4: "Ranged",
+    5: "Prayer",
+    6: "Magic",
+    7: "Cooking",
+    8: "Woodcutting",
+    9: "Fletching",
+    10: "Fishing",
+    11: "Firemaking",
+    12: "Crafting",
+    13: "Smithing",
+    14: "Mining",
+    15: "Herblore",
+    16: "Agility",
+    17: "Thieving",
+    18: "Slayer",
+    19: "Farming",
+    20: "Runecrafting",
+    21: "Hunter",
+    22: "Construction",
+    23: "Summoning",
+    24: "Dungeoneering",
+    25: "Divination",
+    26: "Invention",
+    27: "Archaeology",
+    28: "Necromancy",
+  };
 
-  window.addEventListener("DOMContentLoaded", () => {
-    const elapsed = performance.now() - startTime;
-    const remainingTime = Math.max(0, minLoadTime - elapsed);
+  async function loadPlayerData() {
+    const loadingState = document.getElementById("loading-state");
+    const contentState = document.getElementById("content-state");
+    const errorState = document.getElementById("error-state");
+    const errorMessage = document.getElementById("error-message");
 
-    setTimeout(() => {
-      const loadingState = document.getElementById("loading-state");
-      const contentState = document.getElementById("content-state");
+    try {
+      const response = await fetch(
+        "/api/player-data?username=" + encodeURIComponent(characterName)
+      );
+      const data = await response.json();
 
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to fetch player data");
+      }
+
+      // Update Hero
+      const heroTitle = document.getElementById("hero-title");
+      if (heroTitle) {
+        heroTitle.textContent = data.name || characterName;
+      }
+
+      // Update Player Stats
+      document.getElementById("stat-combat-level").textContent =
+        data.combatlevel || 0;
+      document.getElementById("stat-total-level").textContent =
+        data.totalskill || 0;
+      document.getElementById("stat-total-xp").textContent = (
+        data.totalxp || 0
+      ).toLocaleString();
+      document.getElementById("stat-quests").textContent =
+        data.questscomplete || 0;
+      document.getElementById("stat-rank").textContent = data.rank || "N/A";
+      document.getElementById("stat-status").textContent =
+        data.loggedIn === "true" ? "Online" : "Offline";
+
+      // Populate Skills Table
+      const skillsTbody = document.getElementById("skills-tbody");
+      if (skillsTbody && data.skillvalues) {
+        skillsTbody.innerHTML = "";
+        const sortedSkills = [...data.skillvalues].sort(
+          (a, b) => (b?.xp || 0) / 10 - (a?.xp || 0) / 10
+        );
+
+        sortedSkills.forEach((skill, index) => {
+          const row = document.createElement("tr");
+          const isEven = index % 2 === 0;
+          const skillName = SKILL_NAMES[skill.id] || "Skill " + skill.id;
+          const skillLevel = skill.level || 0;
+          const skillXP = Math.floor((skill.xp || 0) / 10).toLocaleString();
+          const skillRank = (skill.rank || 0).toLocaleString();
+
+          row.className =
+            "text-gray-300 outline outline-gray -outline-offset-1 shadow-vertical-soft " +
+            (isEven ? "bg-navy-100" : "bg-navy-200");
+          row.innerHTML =
+            '<td class="py-3 px-4 text-yellow font-medium">' +
+            skillName +
+            "</td>" +
+            '<td class="text-right py-3 px-4">' +
+            skillLevel +
+            "</td>" +
+            '<td class="text-right py-3 px-4">' +
+            skillXP +
+            "</td>" +
+            '<td class="text-right py-3 px-4">' +
+            skillRank +
+            "</td>";
+          skillsTbody.appendChild(row);
+        });
+      }
+
+      // Populate Recent Activities
+      const activitiesList = document.getElementById("activities-list");
+      if (activitiesList && data.activities) {
+        activitiesList.innerHTML = "";
+
+        if (data.activities.length === 0) {
+          const emptyItem = document.createElement("li");
+          emptyItem.className = "text-gray-500 text-center py-4";
+          emptyItem.textContent = "No recent activities";
+          activitiesList.appendChild(emptyItem);
+        } else {
+          // Format numbers in text
+          const formatText = (text) =>
+            text
+              ? text.replace(/(\d{4,})/g, (match) =>
+                  parseInt(match, 10).toLocaleString()
+                )
+              : "";
+
+          data.activities.forEach((activity, index) => {
+            const isEven = index % 2 === 0;
+            const item = document.createElement("li");
+            item.className =
+              "flex max-md:flex-col md:items-center justify-between p-4 text-gray-300 outline outline-gray -outline-offset-1 shadow-vertical-soft " +
+              (isEven ? "bg-navy-100" : "bg-navy-200");
+
+            const formattedText = formatText(
+              activity.text || "Unknown activity"
+            );
+            const formattedDetails = formatText(activity.details || "");
+            const activityDate = activity.date || "";
+
+            item.innerHTML =
+              '<div class="flex flex-col gap-1">' +
+              '<h3 class="text-yellow font-semibold text-lg">' +
+              formattedText +
+              "</h3>" +
+              '<p class="text-gray-300 text-sm">' +
+              formattedDetails +
+              "</p>" +
+              "</div>" +
+              '<time class="text-gray-300 text-xs block">' +
+              activityDate +
+              "</time>";
+            activitiesList.appendChild(item);
+          });
+        }
+      }
+
+      // Show content, hide loading
       if (loadingState && contentState) {
         loadingState.style.display = "none";
         contentState.style.display = "block";
       }
-    }, remainingTime);
-  });
+    } catch (error) {
+      console.error("Error loading player data:", error);
+
+      if (loadingState && errorState && errorMessage) {
+        loadingState.style.display = "none";
+        errorState.style.display = "block";
+        errorMessage.textContent =
+          error instanceof Error ? error.message : "Unknown error occurred";
+      }
+    }
+  }
+
+  // Load data when DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", loadPlayerData);
+  } else {
+    loadPlayerData();
+  }
 </script>
