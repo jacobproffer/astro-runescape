@@ -1,1 +1,13 @@
-<footer></footer>
+---
+import { Image } from "astro:assets";
+import border from "@assets/img/border.jpg";
+---
+
+<footer class="mt-1 bg-tan">
+  <Image class="block w-full" src={border} alt="" loading="eager" />
+  <div class="container mx-auto py-2 px-4">
+    <p class="text-sm text-navy-300">
+      &copy; {new Date().getFullYear()} My Website. All rights reserved.
+    </p>
+  </div>
+</footer>
