@@ -19,7 +19,7 @@ const { characterName } = Astro.props;
     <LoadingSpinner message="Fetching player stats from RuneScape..." />
   </div>
 
-  <div id="error-state" style="display: none;">
+  <div id="error-state" class="hidden">
     <section class="py-12">
       <div class="container mx-auto px-4">
         <div
@@ -32,7 +32,7 @@ const { characterName } = Astro.props;
     </section>
   </div>
 
-  <div id="content-state" style="display: none;">
+  <div id="content-state" class="hidden">
     <div class="container mx-auto px-4">
       <!-- Hero -->
       <section class="py-8">
@@ -156,6 +156,17 @@ const { characterName } = Astro.props;
     const errorState = document.getElementById("error-state");
     const errorMessage = document.getElementById("error-message");
 
+    // Validate critical UI elements exist
+    if (!loadingState || !contentState || !errorState || !errorMessage) {
+      console.error("Critical UI elements missing:", {
+        loadingState: !!loadingState,
+        contentState: !!contentState,
+        errorState: !!errorState,
+        errorMessage: !!errorMessage,
+      });
+      return;
+    }
+
     try {
       const response = await fetch(
         "/api/player-data?username=" + encodeURIComponent(characterName)
@@ -170,38 +181,52 @@ const { characterName } = Astro.props;
       const heroTitle = document.getElementById("hero-title");
       if (heroTitle) {
         heroTitle.textContent = data.name || characterName;
+      } else {
+        console.warn("Hero title element not found");
       }
 
       // Update Player Stats
       const statCombatLevel = document.getElementById("stat-combat-level");
       if (statCombatLevel) {
         statCombatLevel.textContent = data.combatlevel || 0;
+      } else {
+        console.warn("Combat level stat element not found");
       }
 
       const statTotalLevel = document.getElementById("stat-total-level");
       if (statTotalLevel) {
         statTotalLevel.textContent = data.totalskill || 0;
+      } else {
+        console.warn("Total level stat element not found");
       }
 
       const statTotalXp = document.getElementById("stat-total-xp");
       if (statTotalXp) {
         statTotalXp.textContent = (data.totalxp || 0).toLocaleString();
+      } else {
+        console.warn("Total XP stat element not found");
       }
 
       const statQuests = document.getElementById("stat-quests");
       if (statQuests) {
         statQuests.textContent = data.questscomplete || 0;
+      } else {
+        console.warn("Quests stat element not found");
       }
 
       const statRank = document.getElementById("stat-rank");
       if (statRank) {
         statRank.textContent = data.rank || "N/A";
+      } else {
+        console.warn("Rank stat element not found");
       }
 
       const statStatus = document.getElementById("stat-status");
       if (statStatus) {
         statStatus.textContent =
           data.loggedIn === "true" ? "Online" : "Offline";
+      } else {
+        console.warn("Status stat element not found");
       }
 
       // Populate Skills Table
@@ -247,6 +272,13 @@ const { characterName } = Astro.props;
           row.appendChild(rankCell);
           skillsTbody.appendChild(row);
         });
+      } else {
+        if (!skillsTbody) {
+          console.warn("Skills table body element not found");
+        }
+        if (!data.skillvalues) {
+          console.warn("No skill values data received from API");
+        }
       }
 
       // Populate Recent Activities
@@ -273,6 +305,7 @@ const { characterName } = Astro.props;
             if (!dateStr) return "";
             try {
               // Parse format like "09-Jan-2026 14:30"
+              // RuneScape API returns dates in UTC
               const months = {
                 Jan: 0,
                 Feb: 1,
@@ -292,14 +325,15 @@ const { characterName } = Astro.props;
               );
               if (match) {
                 const [, day, month, year, hour, minute] = match;
-                const date = new Date(
+                // Use Date.UTC to create a UTC timestamp
+                const timestamp = Date.UTC(
                   parseInt(year),
                   months[month],
                   parseInt(day),
                   parseInt(hour),
                   parseInt(minute)
                 );
-                return date.toISOString();
+                return new Date(timestamp).toISOString();
               }
             } catch (e) {
               console.warn("Failed to parse date:", dateStr, e);
@@ -347,19 +381,26 @@ const { characterName } = Astro.props;
             activitiesList.appendChild(item);
           });
         }
+      } else {
+        if (!activitiesList) {
+          console.warn("Activities list element not found");
+        }
+        if (!data.activities) {
+          console.warn("No activities data received from API");
+        }
       }
 
       // Show content, hide loading
       if (loadingState && contentState) {
-        loadingState.style.display = "none";
-        contentState.style.display = "block";
+        loadingState.classList.add("hidden");
+        contentState.classList.remove("hidden");
       }
     } catch (error) {
       console.error("Error loading player data:", error);
 
       if (loadingState && errorState && errorMessage) {
-        loadingState.style.display = "none";
-        errorState.style.display = "block";
+        loadingState.classList.add("hidden");
+        errorState.classList.remove("hidden");
         errorMessage.textContent =
           error instanceof Error ? error.message : "Unknown error occurred";
       }
