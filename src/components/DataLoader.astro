@@ -2,56 +2,384 @@
 /**
  * DataLoader Component
  *
- * Provides a loading state wrapper that displays a loading spinner while content is being
- * prepared, then smoothly transitions to show the actual content. Despite the content being
- * server-side rendered (SSR), this component ensures a minimum loading time for better UX,
- * preventing jarring instant displays and providing visual feedback to users.
+ * Fetches player data client-side and displays a loading spinner while waiting for the API response.
+ * The page loads instantly, then fetches data from the RuneScape API via our backend endpoint.
  *
  * @component
- * @example
- * ```astro
- * <DataLoader>
- *   <PlayerStats profile={playerProfile} />
- *   <SkillsTable skills={profile.skillvalues} />
- * </DataLoader>
- * ```
- *
- * @slot default - The content to display after the loading state completes
- *
- * @note The component enforces a minimum 500ms loading display to ensure users see
- *   the loading state, even when server-side rendering is very fast. This prevents
- *   a jarring flash of content.
+ * @prop {string} characterName - The RuneScape character name to fetch data for
  */
 import LoadingSpinner from "@components/LoadingSpinner.astro";
+import Divider from "@components/Divider.astro";
+import { SKILL_NAMES } from "@/types/runescape";
+
+const { characterName } = Astro.props;
 ---
 
 <div id="data-loader">
   <div id="loading-state">
     <LoadingSpinner message="Fetching player stats from RuneScape..." />
   </div>
-  <div id="content-state" style="display: none;">
-    <slot />
+
+  <div id="error-state" class="hidden">
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <div
+          class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"
+        >
+          <strong class="font-bold">Error:</strong>
+          <span class="block sm:inline" id="error-message"></span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="content-state" class="hidden">
+    <div class="container mx-auto px-4">
+      <!-- Hero -->
+      <section class="py-8">
+        <h1
+          id="hero-title"
+          class="text-5xl font-cinzel font-bold text-center text-yellow uppercase"
+        >
+          {characterName}
+        </h1>
+      </section>
+
+      <!-- Player Stats -->
+      <section id="player-stats-section">
+        <h2 class="text-3xl font-cinzel font-bold uppercase mb-6 text-yellow">
+          Player Stats
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="text-center p-4 bg-gray-50 rounded">
+            <div class="text-4xl font-bold" id="stat-combat-level">0</div>
+            <div class="text-gray-600 mt-2">Combat Level</div>
+          </div>
+          <div class="text-center p-4 bg-gray-50 rounded">
+            <div class="text-4xl font-bold" id="stat-total-level">0</div>
+            <div class="text-gray-600 mt-2">Total Skill Level</div>
+          </div>
+          <div class="text-center p-4 bg-gray-50 rounded">
+            <div class="text-4xl font-bold" id="stat-total-xp">0</div>
+            <div class="text-gray-600 mt-2">Total XP</div>
+          </div>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="text-center p-3 bg-gray-50 rounded">
+            <div class="text-2xl font-bold" id="stat-quests">0</div>
+            <div class="text-gray-600 text-sm">Quests Complete</div>
+          </div>
+          <div class="text-center p-3 bg-gray-50 rounded">
+            <div class="text-2xl font-bold" id="stat-rank">N/A</div>
+            <div class="text-gray-600 text-sm">Overall Rank</div>
+          </div>
+          <div class="text-center p-3 bg-gray-50 rounded">
+            <div class="text-2xl font-bold" id="stat-status">Offline</div>
+            <div class="text-gray-600 text-sm">Status</div>
+          </div>
+        </div>
+        <Divider loading="eager" />
+      </section>
+
+      <!-- Skills Table -->
+      <section id="skills-section">
+        <div class="p-4 bg-navy-100 outline outline-gray -outline-offset-1">
+          <h2 class="text-3xl text-yellow font-cinzel uppercase font-bold">
+            Skills
+          </h2>
+        </div>
+        <div class="overflow-x-auto -mb-0.75">
+          <table class="w-full border-separate border-spacing-y-0.75">
+            <thead>
+              <tr class="bg-navy-200 outline outline-gray -outline-offset-1">
+                <th class="text-yellow text-left py-3 px-4">Skill</th>
+                <th class="text-yellow text-right py-3 px-4">Level</th>
+                <th class="text-yellow text-right py-3 px-4">XP</th>
+                <th class="text-yellow text-right py-3 px-4">Rank</th>
+              </tr>
+            </thead>
+            <tbody id="skills-tbody"></tbody>
+          </table>
+        </div>
+        <Divider loading="lazy" />
+      </section>
+
+      <!-- Recent Activities -->
+      <section class="flex flex-col gap-0.75" id="activities-section">
+        <div class="p-4 bg-navy-200 outline outline-gray -outline-offset-1">
+          <h2 class="text-yellow text-3xl font-cinzel font-bold uppercase">
+            Recent Activities
+          </h2>
+        </div>
+        <ol class="flex flex-col gap-0.75" id="activities-list"></ol>
+      </section>
+    </div>
   </div>
 </div>
 
-<script>
-  // Show content immediately when the page loads (content is already fetched server-side)
-  // Add a small delay to show the loader briefly for user feedback
-  const minLoadTime = 500; // 500ms minimum to show loader
-  const startTime = performance.now();
+<script define:vars={{ characterName, SKILL_NAMES }}>
+  async function loadPlayerData() {
+    const loadingState = document.getElementById("loading-state");
+    const contentState = document.getElementById("content-state");
+    const errorState = document.getElementById("error-state");
+    const errorMessage = document.getElementById("error-message");
 
-  window.addEventListener("DOMContentLoaded", () => {
-    const elapsed = performance.now() - startTime;
-    const remainingTime = Math.max(0, minLoadTime - elapsed);
+    // Validate critical UI elements exist
+    if (!loadingState || !contentState || !errorState || !errorMessage) {
+      console.error("Critical UI elements missing:", {
+        loadingState: !!loadingState,
+        contentState: !!contentState,
+        errorState: !!errorState,
+        errorMessage: !!errorMessage,
+      });
+      return;
+    }
 
-    setTimeout(() => {
-      const loadingState = document.getElementById("loading-state");
-      const contentState = document.getElementById("content-state");
+    try {
+      const response = await fetch(
+        "/api/player-data?username=" + encodeURIComponent(characterName)
+      );
+      const data = await response.json();
 
-      if (loadingState && contentState) {
-        loadingState.style.display = "none";
-        contentState.style.display = "block";
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to fetch player data");
       }
-    }, remainingTime);
-  });
+
+      // Update Hero
+      const heroTitle = document.getElementById("hero-title");
+      if (heroTitle) {
+        heroTitle.textContent = data.name || characterName;
+      } else {
+        console.warn("Hero title element not found");
+      }
+
+      // Update Player Stats
+      const statCombatLevel = document.getElementById("stat-combat-level");
+      if (statCombatLevel) {
+        statCombatLevel.textContent = data.combatlevel || 0;
+      } else {
+        console.warn("Combat level stat element not found");
+      }
+
+      const statTotalLevel = document.getElementById("stat-total-level");
+      if (statTotalLevel) {
+        statTotalLevel.textContent = data.totalskill || 0;
+      } else {
+        console.warn("Total level stat element not found");
+      }
+
+      const statTotalXp = document.getElementById("stat-total-xp");
+      if (statTotalXp) {
+        statTotalXp.textContent = (data.totalxp || 0).toLocaleString();
+      } else {
+        console.warn("Total XP stat element not found");
+      }
+
+      const statQuests = document.getElementById("stat-quests");
+      if (statQuests) {
+        statQuests.textContent = data.questscomplete || 0;
+      } else {
+        console.warn("Quests stat element not found");
+      }
+
+      const statRank = document.getElementById("stat-rank");
+      if (statRank) {
+        statRank.textContent = data.rank || "N/A";
+      } else {
+        console.warn("Rank stat element not found");
+      }
+
+      const statStatus = document.getElementById("stat-status");
+      if (statStatus) {
+        statStatus.textContent =
+          data.loggedIn === "true" ? "Online" : "Offline";
+      } else {
+        console.warn("Status stat element not found");
+      }
+
+      // Populate Skills Table
+      const skillsTbody = document.getElementById("skills-tbody");
+      if (skillsTbody && data.skillvalues) {
+        skillsTbody.innerHTML = "";
+        const sortedSkills = [...data.skillvalues].sort(
+          (a, b) => (b?.xp || 0) / 10 - (a?.xp || 0) / 10
+        );
+
+        sortedSkills.forEach((skill, index) => {
+          const row = document.createElement("tr");
+          const isEven = index % 2 === 0;
+          const skillName = SKILL_NAMES[skill.id] || "Skill " + skill.id;
+          const skillLevel = skill.level || 0;
+          const skillXP = Math.floor((skill.xp || 0) / 10).toLocaleString();
+          const skillRank = (skill.rank || 0).toLocaleString();
+
+          row.className =
+            "text-gray-300 outline outline-gray -outline-offset-1 shadow-vertical-soft " +
+            (isEven ? "bg-navy-100" : "bg-navy-200");
+
+          // Create cells using DOM methods to prevent XSS
+          const nameCell = document.createElement("td");
+          nameCell.className = "py-3 px-4 text-yellow font-medium";
+          nameCell.textContent = skillName;
+
+          const levelCell = document.createElement("td");
+          levelCell.className = "text-right py-3 px-4";
+          levelCell.textContent = skillLevel;
+
+          const xpCell = document.createElement("td");
+          xpCell.className = "text-right py-3 px-4";
+          xpCell.textContent = skillXP;
+
+          const rankCell = document.createElement("td");
+          rankCell.className = "text-right py-3 px-4";
+          rankCell.textContent = skillRank;
+
+          row.appendChild(nameCell);
+          row.appendChild(levelCell);
+          row.appendChild(xpCell);
+          row.appendChild(rankCell);
+          skillsTbody.appendChild(row);
+        });
+      } else {
+        if (!skillsTbody) {
+          console.warn("Skills table body element not found");
+        }
+        if (!data.skillvalues) {
+          console.warn("No skill values data received from API");
+        }
+      }
+
+      // Populate Recent Activities
+      const activitiesList = document.getElementById("activities-list");
+      if (activitiesList && data.activities) {
+        activitiesList.innerHTML = "";
+
+        if (data.activities.length === 0) {
+          const emptyItem = document.createElement("li");
+          emptyItem.className = "text-gray-500 text-center py-4";
+          emptyItem.textContent = "No recent activities";
+          activitiesList.appendChild(emptyItem);
+        } else {
+          // Format numbers in text
+          const formatText = (text) =>
+            text
+              ? text.replace(/(\d{4,})/g, (match) =>
+                  parseInt(match, 10).toLocaleString()
+                )
+              : "";
+
+          // Convert RuneScape date format (DD-MMM-YYYY HH:MM) to ISO 8601
+          const toISODateTime = (dateStr) => {
+            if (!dateStr) return "";
+            try {
+              // Parse format like "09-Jan-2026 14:30"
+              // RuneScape API returns dates in UTC
+              const months = {
+                Jan: 0,
+                Feb: 1,
+                Mar: 2,
+                Apr: 3,
+                May: 4,
+                Jun: 5,
+                Jul: 6,
+                Aug: 7,
+                Sep: 8,
+                Oct: 9,
+                Nov: 10,
+                Dec: 11,
+              };
+              const match = dateStr.match(
+                /(\d{2})-(\w{3})-(\d{4})\s+(\d{2}):(\d{2})/
+              );
+              if (match) {
+                const [, day, month, year, hour, minute] = match;
+                // Use Date.UTC to create a UTC timestamp
+                const timestamp = Date.UTC(
+                  parseInt(year),
+                  months[month],
+                  parseInt(day),
+                  parseInt(hour),
+                  parseInt(minute)
+                );
+                return new Date(timestamp).toISOString();
+              }
+            } catch (e) {
+              console.warn("Failed to parse date:", dateStr, e);
+            }
+            return "";
+          };
+
+          data.activities.forEach((activity, index) => {
+            const isEven = index % 2 === 0;
+            const item = document.createElement("li");
+            item.className =
+              "flex max-md:flex-col md:items-center justify-between p-4 text-gray-300 outline outline-gray -outline-offset-1 shadow-vertical-soft " +
+              (isEven ? "bg-navy-100" : "bg-navy-200");
+
+            const formattedText = formatText(
+              activity.text || "Unknown activity"
+            );
+            const formattedDetails = formatText(activity.details || "");
+            const activityDate = activity.date || "";
+            const isoDate = toISODateTime(activityDate);
+
+            // Create elements using DOM methods to prevent XSS
+            const contentDiv = document.createElement("div");
+            contentDiv.className = "flex flex-col gap-1";
+
+            const heading = document.createElement("h3");
+            heading.className = "text-yellow font-semibold text-lg";
+            heading.textContent = formattedText;
+
+            const details = document.createElement("p");
+            details.className = "text-gray-300 text-sm";
+            details.textContent = formattedDetails;
+
+            const time = document.createElement("time");
+            time.className = "text-gray-300 text-xs block";
+            time.textContent = activityDate;
+            if (isoDate) {
+              time.setAttribute("datetime", isoDate);
+            }
+
+            contentDiv.appendChild(heading);
+            contentDiv.appendChild(details);
+            item.appendChild(contentDiv);
+            item.appendChild(time);
+            activitiesList.appendChild(item);
+          });
+        }
+      } else {
+        if (!activitiesList) {
+          console.warn("Activities list element not found");
+        }
+        if (!data.activities) {
+          console.warn("No activities data received from API");
+        }
+      }
+
+      // Show content, hide loading
+      if (loadingState && contentState) {
+        loadingState.classList.add("hidden");
+        contentState.classList.remove("hidden");
+      }
+    } catch (error) {
+      console.error("Error loading player data:", error);
+
+      if (loadingState && errorState && errorMessage) {
+        loadingState.classList.add("hidden");
+        errorState.classList.remove("hidden");
+        errorMessage.textContent =
+          error instanceof Error ? error.message : "Unknown error occurred";
+      }
+    }
+  }
+
+  // Load data when DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", loadPlayerData);
+  } else {
+    loadPlayerData();
+  }
 </script>
