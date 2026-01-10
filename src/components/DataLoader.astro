@@ -173,18 +173,36 @@ const { characterName } = Astro.props;
       }
 
       // Update Player Stats
-      document.getElementById("stat-combat-level").textContent =
-        data.combatlevel || 0;
-      document.getElementById("stat-total-level").textContent =
-        data.totalskill || 0;
-      document.getElementById("stat-total-xp").textContent = (
-        data.totalxp || 0
-      ).toLocaleString();
-      document.getElementById("stat-quests").textContent =
-        data.questscomplete || 0;
-      document.getElementById("stat-rank").textContent = data.rank || "N/A";
-      document.getElementById("stat-status").textContent =
-        data.loggedIn === "true" ? "Online" : "Offline";
+      const statCombatLevel = document.getElementById("stat-combat-level");
+      if (statCombatLevel) {
+        statCombatLevel.textContent = data.combatlevel || 0;
+      }
+
+      const statTotalLevel = document.getElementById("stat-total-level");
+      if (statTotalLevel) {
+        statTotalLevel.textContent = data.totalskill || 0;
+      }
+
+      const statTotalXp = document.getElementById("stat-total-xp");
+      if (statTotalXp) {
+        statTotalXp.textContent = (data.totalxp || 0).toLocaleString();
+      }
+
+      const statQuests = document.getElementById("stat-quests");
+      if (statQuests) {
+        statQuests.textContent = data.questscomplete || 0;
+      }
+
+      const statRank = document.getElementById("stat-rank");
+      if (statRank) {
+        statRank.textContent = data.rank || "N/A";
+      }
+
+      const statStatus = document.getElementById("stat-status");
+      if (statStatus) {
+        statStatus.textContent =
+          data.loggedIn === "true" ? "Online" : "Offline";
+      }
 
       // Populate Skills Table
       const skillsTbody = document.getElementById("skills-tbody");
@@ -205,19 +223,28 @@ const { characterName } = Astro.props;
           row.className =
             "text-gray-300 outline outline-gray -outline-offset-1 shadow-vertical-soft " +
             (isEven ? "bg-navy-100" : "bg-navy-200");
-          row.innerHTML =
-            '<td class="py-3 px-4 text-yellow font-medium">' +
-            skillName +
-            "</td>" +
-            '<td class="text-right py-3 px-4">' +
-            skillLevel +
-            "</td>" +
-            '<td class="text-right py-3 px-4">' +
-            skillXP +
-            "</td>" +
-            '<td class="text-right py-3 px-4">' +
-            skillRank +
-            "</td>";
+
+          // Create cells using DOM methods to prevent XSS
+          const nameCell = document.createElement("td");
+          nameCell.className = "py-3 px-4 text-yellow font-medium";
+          nameCell.textContent = skillName;
+
+          const levelCell = document.createElement("td");
+          levelCell.className = "text-right py-3 px-4";
+          levelCell.textContent = skillLevel;
+
+          const xpCell = document.createElement("td");
+          xpCell.className = "text-right py-3 px-4";
+          xpCell.textContent = skillXP;
+
+          const rankCell = document.createElement("td");
+          rankCell.className = "text-right py-3 px-4";
+          rankCell.textContent = skillRank;
+
+          row.appendChild(nameCell);
+          row.appendChild(levelCell);
+          row.appendChild(xpCell);
+          row.appendChild(rankCell);
           skillsTbody.appendChild(row);
         });
       }
@@ -241,6 +268,45 @@ const { characterName } = Astro.props;
                 )
               : "";
 
+          // Convert RuneScape date format (DD-MMM-YYYY HH:MM) to ISO 8601
+          const toISODateTime = (dateStr) => {
+            if (!dateStr) return "";
+            try {
+              // Parse format like "09-Jan-2026 14:30"
+              const months = {
+                Jan: 0,
+                Feb: 1,
+                Mar: 2,
+                Apr: 3,
+                May: 4,
+                Jun: 5,
+                Jul: 6,
+                Aug: 7,
+                Sep: 8,
+                Oct: 9,
+                Nov: 10,
+                Dec: 11,
+              };
+              const match = dateStr.match(
+                /(\d{2})-(\w{3})-(\d{4})\s+(\d{2}):(\d{2})/
+              );
+              if (match) {
+                const [, day, month, year, hour, minute] = match;
+                const date = new Date(
+                  parseInt(year),
+                  months[month],
+                  parseInt(day),
+                  parseInt(hour),
+                  parseInt(minute)
+                );
+                return date.toISOString();
+              }
+            } catch (e) {
+              console.warn("Failed to parse date:", dateStr, e);
+            }
+            return "";
+          };
+
           data.activities.forEach((activity, index) => {
             const isEven = index % 2 === 0;
             const item = document.createElement("li");
@@ -253,19 +319,31 @@ const { characterName } = Astro.props;
             );
             const formattedDetails = formatText(activity.details || "");
             const activityDate = activity.date || "";
+            const isoDate = toISODateTime(activityDate);
 
-            item.innerHTML =
-              '<div class="flex flex-col gap-1">' +
-              '<h3 class="text-yellow font-semibold text-lg">' +
-              formattedText +
-              "</h3>" +
-              '<p class="text-gray-300 text-sm">' +
-              formattedDetails +
-              "</p>" +
-              "</div>" +
-              '<time class="text-gray-300 text-xs block">' +
-              activityDate +
-              "</time>";
+            // Create elements using DOM methods to prevent XSS
+            const contentDiv = document.createElement("div");
+            contentDiv.className = "flex flex-col gap-1";
+
+            const heading = document.createElement("h3");
+            heading.className = "text-yellow font-semibold text-lg";
+            heading.textContent = formattedText;
+
+            const details = document.createElement("p");
+            details.className = "text-gray-300 text-sm";
+            details.textContent = formattedDetails;
+
+            const time = document.createElement("time");
+            time.className = "text-gray-300 text-xs block";
+            time.textContent = activityDate;
+            if (isoDate) {
+              time.setAttribute("datetime", isoDate);
+            }
+
+            contentDiv.appendChild(heading);
+            contentDiv.appendChild(details);
+            item.appendChild(contentDiv);
+            item.appendChild(time);
             activitiesList.appendChild(item);
           });
         }
