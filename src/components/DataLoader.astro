@@ -42,40 +42,33 @@ const { characterName } = Astro.props;
             Player Stats
           </h2>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-4">
-          <div class="text-center p-4 bg-gray-50 rounded">
-            <div class="text-4xl font-bold" id="stat-combat-level">0</div>
-            <div class="text-gray-600 mt-2">Combat Level</div>
-          </div>
-          <div class="text-center p-4 bg-gray-50 rounded">
-            <div class="text-4xl font-bold" id="stat-total-level">0</div>
-            <div class="text-gray-600 mt-2">Total Skill Level</div>
-          </div>
-          <div class="text-center p-4 bg-gray-50 rounded">
-            <div class="text-4xl font-bold" id="stat-total-xp">0</div>
-            <div class="text-gray-600 mt-2">Total XP</div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
-          <div class="text-center p-3 bg-gray-50 rounded">
-            <div class="text-2xl font-bold" id="stat-quests">0</div>
-            <div class="text-gray-600 text-sm">Quests Complete</div>
-          </div>
-          <div class="text-center p-3 bg-gray-50 rounded">
-            <div class="text-2xl font-bold" id="stat-rank">N/A</div>
-            <div class="text-gray-600 text-sm">Overall Rank</div>
-          </div>
-          <div class="text-center p-3 bg-gray-50 rounded">
-            <div class="text-2xl font-bold" id="stat-status">Offline</div>
-            <div class="text-gray-600 text-sm">Status</div>
-          </div>
-        </div>
+        <ul class="grid grid-cols-1 md:grid-cols-5 gap-0.75 pt-0.75 bg-black">
+          <li class="p-4 bg-navy-200 outline outline-gray -outline-offset-1">
+            <h3 class="text-yellow text-lg font-bold">Combat Level</h3>
+            <div class="text-gray-300" id="stat-combat-level">0</div>
+          </li>
+          <li class="p-4 bg-navy-200 outline outline-gray -outline-offset-1">
+            <h3 class="text-yellow text-lg font-bold">Total Level</h3>
+            <div class="text-gray-300" id="stat-total-level">0</div>
+          </li>
+          <li class="p-4 bg-navy-200 outline outline-gray -outline-offset-1">
+            <h3 class="text-yellow text-lg font-bold">Total XP</h3>
+            <div class="text-gray-300" id="stat-total-xp">0</div>
+          </li>
+          <li class="p-4 bg-navy-200 outline outline-gray -outline-offset-1">
+            <h3 class="text-yellow text-lg font-bold">Quests Complete</h3>
+            <div class="text-gray-300" id="stat-quests">0</div>
+          </li>
+          <li class="p-4 bg-navy-200 outline outline-gray -outline-offset-1">
+            <h3 class="text-yellow text-lg font-bold">Rank</h3>
+            <div class="text-gray-300" id="stat-rank">N/A</div>
+          </li>
+        </ul>
         <Divider loading="eager" />
       </section>
 
       <!-- Skills Table -->
-      <section id="skills-section">
+      <section class="bg-black" id="skills-section">
         <div class="p-4 bg-navy-100 outline outline-gray -outline-offset-1">
           <h2 class="text-3xl text-yellow font-cinzel uppercase font-bold">
             Skills
@@ -85,10 +78,10 @@ const { characterName } = Astro.props;
           <table class="w-full border-separate border-spacing-y-0.75">
             <thead>
               <tr class="bg-navy-200 outline outline-gray -outline-offset-1">
-                <th class="text-yellow text-left py-3 px-4">Skill</th>
-                <th class="text-yellow text-right py-3 px-4">Level</th>
-                <th class="text-yellow text-right py-3 px-4">XP</th>
-                <th class="text-yellow text-right py-3 px-4">Rank</th>
+                <th class="text-yellow text-lg text-left py-3 px-4">Skill</th>
+                <th class="text-yellow text-lg text-right py-3 px-4">Level</th>
+                <th class="text-yellow text-lg text-right py-3 px-4">XP</th>
+                <th class="text-yellow text-lg text-right py-3 px-4">Rank</th>
               </tr>
             </thead>
             <tbody id="skills-tbody"></tbody>
@@ -98,7 +91,7 @@ const { characterName } = Astro.props;
       </section>
 
       <!-- Recent Activities -->
-      <section class="flex flex-col gap-0.75" id="activities-section">
+      <section class="flex flex-col gap-0.75 bg-black" id="activities-section">
         <div class="p-4 bg-navy-200 outline outline-gray -outline-offset-1">
           <h2 class="text-yellow text-3xl font-cinzel font-bold uppercase">
             Recent Activities
@@ -156,7 +149,7 @@ const { characterName } = Astro.props;
 
       const statTotalLevel = document.getElementById("stat-total-level");
       if (statTotalLevel) {
-        statTotalLevel.textContent = data.totalskill || 0;
+        statTotalLevel.textContent = (data.totalskill || 0).toLocaleString();
       } else {
         console.warn("Total level stat element not found");
       }
