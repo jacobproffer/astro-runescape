@@ -1,1 +1,59 @@
-<nav aria-label="primary"></nav>
+---
+import { Image } from "astro:assets";
+import avatar from "@assets/img/avatar.png";
+---
+
+<div class="bg-navy-200 border-t border-b border-solid border-gray-dark">
+  <div
+    class="relative flex items-center justify-between container px-4 mx-auto"
+  >
+    <header class="flex items-center gap-4 my-2">
+      <a
+        class="fixed -top-full left-1/2 -translate-x-1/2 transition-top ease-in-out delay-150 focus:top-4 focus:outline focus:outline-dashed focus:outline-yellow focus:-outline-offset-1 bg-navy-200 border-l border-r border-r-black border-l-gray-dark border-solid py-4 px-8 text-center font-cinzel uppercase text-yellow hover:text-cream hover:bg-black transition-colors"
+        href="#content">Skip to main content</a
+      >
+      <div
+        class="relative aspect-square rounded-full bg-black border border-gray-darker border-solid"
+      >
+        <Image
+          class="block w-full h-full object-cover object-bottom-right rounded-full"
+          src={avatar}
+          alt=""
+          loading="eager"
+          widths={[64, 128, 256]}
+          sizes="64px"
+          quality={80}
+          format="webp"
+        />
+      </div>
+      <h1 class="text-lg font-bold text-yellow font-cinzel uppercase">Apone</h1>
+    </header>
+    <nav
+      class="absolute top-1/2 right-4 h-full -translate-y-1/2"
+      aria-label="primary"
+    >
+      <ul
+        class="flex items-center max-w-max h-full border-r border-r-gray-dark"
+      >
+        <li class="h-full">
+          <a
+            class="flex flex-col justify-center h-full border-l border-r border-r-black border-l-gray-dark border-solid py-4 px-8 text-center font-bold text-yellow hover:text-cream hover:bg-black focus:outline focus:outline-dashed focus:outline-yellow focus:-outline-offset-1 transition-colors"
+            href="/">Home</a
+          >
+        </li>
+        <li class="h-full">
+          <a
+            class="flex flex-col justify-center h-full border-l border-r border-r-black border-l-gray-dark border-solid py-4 px-8 text-center font-bold text-yellow hover:text-cream hover:bg-black focus:outline focus:outline-dashed focus:outline-yellow focus:-outline-offset-1 transition-colors"
+            href="/about">About</a
+          >
+        </li>
+        <li class="h-full">
+          <a
+            class="flex flex-col justify-center h-full border-l border-r border-r-black border-l-gray-dark border-solid py-4 px-8 text-center font-bold text-yellow hover:text-cream hover:bg-black focus:outline focus:outline-dashed focus:outline-yellow focus:-outline-offset-1 transition-colors"
+            href="/blog">Blog</a
+          >
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

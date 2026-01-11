@@ -4,12 +4,15 @@
 @import "@fontsource-variable/cinzel";
 
 @theme {
-  --color-black: #02090f;
+  --color-black: #010205;
   --color-navy-100: #1a252b;
   --color-navy-200: #182128;
   --color-navy-300: #050c12;
   --color-gray: #2c373b;
+  --color-gray-dark: #44474c;
+  --color-gray-darker: #39444b;
   --color-yellow: #e1bb34;
+  --color-cream: #fff2c5;
   --color-tan: #c5b18e;
   --shadow-vertical-soft:
     0 -4px 5px -1px rgb(0 0 0 / 0.25), 0 4px 5px -1px rgb(0 0 0 / 0.25);

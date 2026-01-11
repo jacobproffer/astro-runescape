@@ -1,11 +1,13 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import DataLoader from "@components/DataLoader.astro";
+import Banner from "@components/Banner.astro";
 
 const CHARACTER_NAME = import.meta.env.PUBLIC_CHARACTER_NAME || "Apone";
 const pageTitle = CHARACTER_NAME;
 ---
 
 <BaseLayout pageTitle={pageTitle}>
+  <Banner />
   <DataLoader characterName={CHARACTER_NAME} />
 </BaseLayout>
