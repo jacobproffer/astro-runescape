@@ -1,6 +1,8 @@
 ---
 import { Image } from "astro:assets";
 import avatar from "@assets/img/avatar.png";
+
+const { characterName } = Astro.props;
 ---
 
 <div class="bg-navy-200 border-t border-b border-solid border-gray-dark">
@@ -28,8 +30,9 @@ import avatar from "@assets/img/avatar.png";
       </div>
       <h1
         class="text-3xl max-md:text-2xl font-bold text-yellow font-cinzel uppercase max-sm:sr-only"
+        id="hero-title"
       >
-        Apone
+        {characterName}
       </h1>
     </header>
     <nav

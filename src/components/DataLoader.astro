@@ -181,14 +181,6 @@ const { characterName } = Astro.props;
         console.warn("Rank stat element not found");
       }
 
-      const statStatus = document.getElementById("stat-status");
-      if (statStatus) {
-        statStatus.textContent =
-          data.loggedIn === "true" ? "Online" : "Offline";
-      } else {
-        console.warn("Status stat element not found");
-      }
-
       // Populate Skills Table
       const skillsTbody = document.getElementById("skills-tbody");
       if (skillsTbody && data.skillvalues) {
