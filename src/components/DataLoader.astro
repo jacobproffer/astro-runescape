@@ -34,23 +34,15 @@ const { characterName } = Astro.props;
   </div>
 
   <div id="content-state" class="hidden">
-    <div class="container mx-auto px-4">
-      <!-- Hero -->
-      <section class="py-8">
-        <h1
-          id="hero-title"
-          class="text-5xl font-cinzel font-bold text-yellow uppercase"
-        >
-          {characterName}
-        </h1>
-      </section>
-
+    <div class="container mx-auto px-4 pt-12">
       <!-- Player Stats -->
-      <section id="player-stats-section">
-        <h2 class="text-3xl font-cinzel font-bold uppercase mb-6 text-yellow">
-          Player Stats
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section class="bg-navy-200" id="player-stats-section">
+        <div class="p-4 bg-navy-100 outline outline-gray -outline-offset-1">
+          <h2 class="text-3xl font-cinzel font-bold uppercase text-yellow">
+            Player Stats
+          </h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-4">
           <div class="text-center p-4 bg-gray-50 rounded">
             <div class="text-4xl font-bold" id="stat-combat-level">0</div>
             <div class="text-gray-600 mt-2">Combat Level</div>
@@ -65,7 +57,7 @@ const { characterName } = Astro.props;
           </div>
         </div>
 
-        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
           <div class="text-center p-3 bg-gray-50 rounded">
             <div class="text-2xl font-bold" id="stat-quests">0</div>
             <div class="text-gray-600 text-sm">Quests Complete</div>
