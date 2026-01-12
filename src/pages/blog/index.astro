@@ -3,6 +3,9 @@ import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Banner from "@components/Banner.astro";
+import Divider from "@components/Divider.astro";
+import Container from "@components/Container.astro";
+import Hero from "@components/Hero.astro";
 import banner from "@assets/img/blog-banner.jpg";
 
 const allPosts = await getCollection(
@@ -18,21 +21,19 @@ const sortedPosts = allPosts.sort(
     b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
+const characterName = import.meta.env.PUBLIC_CHARACTER_NAME || "Player";
+const heroTitle = `${characterName}'s RuneScape Adventure Log`;
+
 const pageTitle = "Blog";
 const pageDescription = "Read the latest RuneScape adventures and guides";
 ---
 
 <BaseLayout pageTitle={pageTitle} pageDescription={pageDescription}>
   <Banner image={banner} />
-  <div class="container px-4 pt-12 mx-auto">
-    <section>
-      <div class="p-4 bg-navy-100 outline outline-gray -outline-offset-1">
-        <h1
-          class="text-4xl max-md:text-2xl font-cinzel font-bold uppercase text-yellow"
-        >
-          Blog
-        </h1>
-      </div>
+  <Container>
+    <Hero headline={heroTitle} />
+    <section class="relative mx-2">
+      <Divider />
       {
         sortedPosts.length === 0 ? (
           <div class="text-center py-12">
@@ -41,7 +42,7 @@ const pageDescription = "Read the latest RuneScape adventures and guides";
             </p>
           </div>
         ) : (
-          <ul class="grid gap-8 md:grid-cols-2 lg:grid-cols-3 bg-navy-100">
+          <ul class="grid gap-8 md:grid-cols-2 bg-navy-100">
             {sortedPosts.map((post: CollectionEntry<"blog">) => (
               <li>
                 <article class="bg-navy-200 border border-gray-dark p-4 hover:border-yellow transition-colors">
@@ -51,7 +52,7 @@ const pageDescription = "Read the latest RuneScape adventures and guides";
                     </h2>
                     <time
                       datetime={post.data.pubDate.toISOString()}
-                      class="text-sm text-gray-light block mb-3"
+                      class="text-sm text-gray-300 block mb-3"
                     >
                       {post.data.pubDate.toLocaleDateString("en-US", {
                         year: "numeric",
@@ -78,5 +79,5 @@ const pageDescription = "Read the latest RuneScape adventures and guides";
         )
       }
     </section>
-  </div>
+  </Container>
 </BaseLayout>

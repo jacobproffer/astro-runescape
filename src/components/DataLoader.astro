@@ -9,10 +9,13 @@
  * @prop {string} characterName - The RuneScape character name to fetch data for
  */
 import LoadingSpinner from "@components/LoadingSpinner.astro";
+import Container from "@components/Container.astro";
 import Divider from "@components/Divider.astro";
+import Hero from "@components/Hero.astro";
 import { SKILL_NAMES } from "@/types/runescape";
 
 const { characterName } = Astro.props;
+const heroTitle = `${characterName}'s RuneScape Overview`;
 ---
 
 <div id="data-loader">
@@ -22,35 +25,20 @@ const { characterName } = Astro.props;
 
   <div id="error-state" class="hidden">
     <section class="py-12">
-      <div class="container mx-auto px-4">
+      <Container>
         <div
           class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"
         >
           <strong class="font-bold">Error:</strong>
           <span class="block sm:inline" id="error-message"></span>
         </div>
-      </div>
+      </Container>
     </section>
   </div>
 
   <div id="content-state" class="hidden">
-    <div class="container mx-auto px-4 pt-12">
-      <section class="relative bg-navy-200 overflow-hidden">
-        <div
-          class="relative z-10 w-full h-4 border-b border-solid border-gray shadow-vertical-hard"
-        >
-        </div>
-        <div
-          class="pt-6 pb-4 px-6 bg-navy-100 outline outline-gray -outline-offset-1"
-        >
-          <h1
-            class="text-4xl max-md:text-2xl font-cinzel font-bold uppercase text-yellow text-balance"
-          >
-            <span id="hero-title">{characterName}</span> - RuneScape Player Profile
-          </h1>
-        </div>
-        <div class="w-full h-4 shadow-vertical-hard"></div>
-      </section>
+    <Container>
+      <Hero headline={heroTitle} />
       <!-- Player Stats -->
       <section class="relative mx-2 bg-navy-200" id="player-stats-section">
         <Divider loading="eager" />
@@ -125,7 +113,7 @@ const { characterName } = Astro.props;
         </div>
         <ol class="flex flex-col gap-0.75" id="activities-list"></ol>
       </section>
-    </div>
+    </Container>
   </div>
 </div>
 
