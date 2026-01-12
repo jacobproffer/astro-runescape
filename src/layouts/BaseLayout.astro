@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from "astro:transitions";
 import "@styles/global.css";
 import SiteSEO from "@components/SiteSEO.astro";
 import Navigation from "@components/Navigation.astro";
@@ -32,6 +33,7 @@ const { pageTitle, pageDescription } = Astro.props;
     />
     <meta name="apple-mobile-web-app-title" content="Deadman's Brew" />
     <link rel="manifest" href="/favicons/site.webmanifest" />
+    <ClientRouter />
     <SiteSEO seo={{ title: pageTitle, description: pageDescription }} />
   </head>
   <body class="bg-black">

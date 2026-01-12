@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Banner from "@components/Banner.astro";
+import banner from "@assets/img/blog-banner.jpg";
 
 const allPosts = await getCollection(
   "blog",
@@ -22,7 +23,7 @@ const pageDescription = "Read the latest RuneScape adventures and guides";
 ---
 
 <BaseLayout pageTitle={pageTitle} pageDescription={pageDescription}>
-  <Banner />
+  <Banner image={banner} />
   <div class="container px-4 pt-12 mx-auto">
     <section>
       <div class="p-4 bg-navy-100 outline outline-gray -outline-offset-1">

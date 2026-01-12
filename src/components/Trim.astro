@@ -1,0 +1,15 @@
+---
+import { Image } from "astro:assets";
+import trim from "@assets/img/trim.png";
+---
+
+<Image
+  class="absolute top-0 left-0 w-full h-4"
+  src={trim}
+  alt=""
+  loading="eager"
+  widths={[400, 768, 1024, 1280, 1536]}
+  sizes="100vw"
+  quality={80}
+  format="webp"
+/>

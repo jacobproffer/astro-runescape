@@ -9,6 +9,7 @@
  * @prop {string} characterName - The RuneScape character name to fetch data for
  */
 import LoadingSpinner from "@components/LoadingSpinner.astro";
+import Trim from "@components/Trim.astro";
 import Divider from "@components/Divider.astro";
 import { SKILL_NAMES } from "@/types/runescape";
 
@@ -35,15 +36,15 @@ const { characterName } = Astro.props;
 
   <div id="content-state" class="hidden">
     <div class="container mx-auto px-4 pt-12">
-      <section class="bg-navy-200">
+      <section class="relative bg-navy-200">
+        <Trim />
         <div
-          class="py-4 px-6 bg-navy-100 outline outline-gray -outline-offset-1"
+          class="pt-8 pb-4 px-6 bg-navy-100 outline outline-gray -outline-offset-1"
         >
           <h1
-            class="text-4xl max-md:text-2xl font-cinzel font-bold uppercase text-yellow"
-            id="hero-title"
+            class="text-4xl max-md:text-2xl font-cinzel font-bold uppercase text-yellow text-balance"
           >
-            {characterName}
+            <span id="hero-title">{characterName}</span> - RuneScape Player Profile
           </h1>
         </div>
         <div class="w-full h-4 shadow-vertical-hard"></div>
@@ -382,4 +383,7 @@ const { characterName } = Astro.props;
   } else {
     loadPlayerData();
   }
+
+  // Re-run when navigating back to this page with view transitions
+  document.addEventListener("astro:page-load", loadPlayerData);
 </script>
