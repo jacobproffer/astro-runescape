@@ -1,0 +1,77 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const blogEntries = await getCollection("blog");
+
+  return blogEntries
+    .filter((entry) => entry.data.draft !== true)
+    .map((entry) => ({
+      params: { slug: entry.slug },
+    }));
+}
+
+const { slug } = Astro.params;
+
+const entry = (await getCollection("blog")).find((post) => post.slug === slug);
+
+if (!entry) {
+  throw new Error("Blog entry not found");
+}
+
+const { Content } = await entry.render();
+---
+
+<BaseLayout
+  pageTitle={entry.data.title}
+  pageDescription={entry.data.description}
+>
+  <article class="container p-4 mx-auto">
+    <header class="mb-8">
+      <a
+        href="/blog"
+        class="inline-block text-yellow hover:text-cream transition-colors mb-4"
+      >
+        ← Back to Blog
+      </a>
+
+      <h1 class="text-5xl font-bold text-yellow font-cinzel uppercase mb-4">
+        {entry.data.title}
+      </h1>
+
+      <div class="flex items-center gap-4 text-cream mb-4">
+        <time datetime={entry.data.pubDate.toISOString()}>
+          {
+            entry.data.pubDate.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              timeZone: "America/New_York",
+            })
+          }
+        </time>
+        <span>•</span>
+        <span>By {entry.data.author}</span>
+      </div>
+
+      {
+        entry.data.tags && entry.data.tags.length > 0 && (
+          <div class="flex flex-wrap gap-2">
+            {entry.data.tags.map((tag: string) => (
+              <span class="text-sm px-3 py-1 bg-navy-200 text-yellow rounded border border-gray-dark">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )
+      }
+    </header>
+
+    <div
+      class="max-w-none text-cream [&_h2]:text-yellow [&_h2]:font-cinzel [&_h2]:uppercase [&_h2]:font-bold [&_h2]:mt-8 [&_h2]:mb-4 [&_h3]:text-yellow [&_h3]:font-cinzel [&_h3]:font-bold [&_h3]:mt-6 [&_h3]:mb-3 [&_p]:mb-4 [&_p]:leading-7 [&_ul]:ml-6 [&_ul]:mb-4 [&_ol]:ml-6 [&_ol]:mb-4 [&_li]:mb-2 [&_a]:text-yellow [&_a]:underline hover:[&_a]:text-cream [&_strong]:text-yellow [&_strong]:font-bold [&_code]:bg-navy-300 [&_code]:px-2 [&_code]:py-1 [&_code]:rounded [&_code]:text-sm"
+    >
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
