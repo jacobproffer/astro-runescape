@@ -36,18 +36,21 @@ const { characterName } = Astro.props;
   <div id="content-state" class="hidden">
     <div class="container mx-auto px-4 pt-12">
       <section class="bg-navy-200">
-        <div class="p-4 bg-navy-100 outline outline-gray -outline-offset-1">
+        <div
+          class="py-4 px-6 bg-navy-100 outline outline-gray -outline-offset-1"
+        >
           <h1
-            class="text-6xl max-md:text-2xl font-cinzel font-bold uppercase text-yellow"
+            class="text-4xl max-md:text-2xl font-cinzel font-bold uppercase text-yellow"
             id="hero-title"
           >
             {characterName}
           </h1>
         </div>
-        <Divider loading="eager" />
+        <div class="w-full h-4 shadow-vertical-hard"></div>
       </section>
       <!-- Player Stats -->
-      <section class="relative bg-navy-200" id="player-stats-section">
+      <section class="relative mx-2 bg-navy-200" id="player-stats-section">
+        <Divider loading="eager" />
         <div class="p-4 bg-navy-100 outline outline-gray -outline-offset-1">
           <h2
             class="text-3xl max-md:text-2xl font-cinzel font-bold uppercase text-yellow"
@@ -81,7 +84,7 @@ const { characterName } = Astro.props;
       </section>
 
       <!-- Skills Table -->
-      <section class="bg-black" id="skills-section">
+      <section class="bg-black mx-2" id="skills-section">
         <div class="p-4 bg-navy-100 outline outline-gray -outline-offset-1">
           <h2
             class="text-3xl max-md:text-2xl text-yellow font-cinzel uppercase font-bold"
@@ -106,7 +109,10 @@ const { characterName } = Astro.props;
       </section>
 
       <!-- Recent Activities -->
-      <section class="flex flex-col gap-0.75 bg-black" id="activities-section">
+      <section
+        class="flex flex-col gap-0.75 bg-black mx-2"
+        id="activities-section"
+      >
         <div class="p-4 bg-navy-200 outline outline-gray -outline-offset-1">
           <h2
             class="text-yellow text-3xl max-md:text-2xl font-cinzel font-bold uppercase"
@@ -214,7 +220,7 @@ const { characterName } = Astro.props;
 
           // Create cells using DOM methods to prevent XSS
           const nameCell = document.createElement("td");
-          nameCell.className = "py-3 px-4 text-yellow font-medium";
+          nameCell.className = "py-3 px-4 text-gray-300 font-medium";
           nameCell.textContent = skillName;
 
           const levelCell = document.createElement("td");
