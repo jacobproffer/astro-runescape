@@ -35,6 +35,17 @@ const { characterName } = Astro.props;
 
   <div id="content-state" class="hidden">
     <div class="container mx-auto px-4 pt-12">
+      <section class="bg-navy-200">
+        <div class="p-4 bg-navy-100 outline outline-gray -outline-offset-1">
+          <h1
+            class="text-6xl max-md:text-2xl font-cinzel font-bold uppercase text-yellow"
+            id="hero-title"
+          >
+            {characterName}
+          </h1>
+        </div>
+        <Divider loading="eager" />
+      </section>
       <!-- Player Stats -->
       <section class="relative bg-navy-200" id="player-stats-section">
         <div class="p-4 bg-navy-100 outline outline-gray -outline-offset-1">
