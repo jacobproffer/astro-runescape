@@ -1,9 +1,12 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import Container from "@components/Container.astro";
 import Hero from "@components/Hero.astro";
 const pageTitle = "404";
 ---
 
 <BaseLayout pageTitle="404">
-  <Hero headline={pageTitle} />
+  <Container>
+    <Hero headline={pageTitle} />
+  </Container>
 </BaseLayout>

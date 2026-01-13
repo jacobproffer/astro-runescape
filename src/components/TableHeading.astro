@@ -1,0 +1,11 @@
+---
+interface Props {
+  text: string;
+  position: "left" | "right";
+}
+
+const { text, position } = Astro.props;
+const alignmentClass = position === "left" ? "text-left" : "text-right";
+---
+
+<th class={`text-yellow text-lg ${alignmentClass} py-3 px-4`}>{text}</th>

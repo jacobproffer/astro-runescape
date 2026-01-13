@@ -1,12 +1,18 @@
 ---
 import { Image } from "astro:assets";
 import banner from "@assets/img/banner.jpg";
+
+interface Props {
+  image?: ImageMetadata;
+}
+
+const { image = banner } = Astro.props;
 ---
 
 <div class="absolute inset-0 -z-1 w-full h-90">
   <Image
     class="block w-full h-full object-cover object-center-right"
-    src={banner}
+    src={image}
     alt=""
     loading="eager"
     widths={[400, 768, 1024, 1280, 1536]}

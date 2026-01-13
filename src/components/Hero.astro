@@ -6,13 +6,18 @@ interface Props {
 const { headline } = Astro.props;
 ---
 
-<section>
-  {
-    headline && (
-      <h1 class="font-medium text-6xl text-yellow font-cinzel text-balance uppercase">
-        {headline}
-      </h1>
-    )
-  }
+<section class="relative overflow-hidden">
+  <div
+    class="pt-6 pb-4 px-6 mx-1 bg-navy-100 outline outline-gray -outline-offset-1 rounded-t-md"
+  >
+    {
+      headline && (
+        <h1 class="text-4xl max-md:text-2xl font-cinzel font-bold uppercase text-yellow text-balance">
+          {headline}
+        </h1>
+      )
+    }
+  </div>
   <slot />
+  <div class="w-full h-4 bg-navy-200 shadow-vertical-hard"></div>
 </section>
