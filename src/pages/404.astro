@@ -1,11 +1,14 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import Banner from "@components/Banner.astro";
 import Container from "@components/Container.astro";
 import Hero from "@components/Hero.astro";
+import banner from "@assets/img/404-banner.jpg";
 const pageTitle = "404";
 ---
 
 <BaseLayout pageTitle="404">
+  <Banner image={banner} />
   <Container>
     <Hero headline={pageTitle} />
   </Container>
