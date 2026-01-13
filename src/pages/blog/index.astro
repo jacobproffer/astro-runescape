@@ -4,6 +4,7 @@ import type { CollectionEntry } from "astro:content";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Banner from "@components/Banner.astro";
 import Divider from "@components/Divider.astro";
+import Section from "@components/Section.astro";
 import Container from "@components/Container.astro";
 import Hero from "@components/Hero.astro";
 import banner from "@assets/img/blog-banner.jpg";
@@ -32,7 +33,7 @@ const pageDescription = "Read the latest RuneScape adventures and guides";
   <Banner image={banner} />
   <Container>
     <Hero headline={heroTitle} />
-    <section class="relative mx-2">
+    <Section id="blog">
       <Divider />
       {
         sortedPosts.length === 0 ? (
@@ -78,6 +79,6 @@ const pageDescription = "Read the latest RuneScape adventures and guides";
           </ul>
         )
       }
-    </section>
+    </Section>
   </Container>
 </BaseLayout>
