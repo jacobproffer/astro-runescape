@@ -1,9 +1,10 @@
 ---
 interface Props {
   headline: string;
+  id?: string;
 }
 
-const { headline } = Astro.props;
+const { headline, id } = Astro.props;
 ---
 
 <section class="relative overflow-hidden">
@@ -12,7 +13,10 @@ const { headline } = Astro.props;
   >
     {
       headline && (
-        <h1 class="text-4xl max-md:text-2xl font-cinzel font-bold uppercase text-yellow text-balance">
+        <h1
+          class="text-4xl max-md:text-2xl font-cinzel font-bold uppercase text-yellow text-balance"
+          id={id}
+        >
           {headline}
         </h1>
       )
