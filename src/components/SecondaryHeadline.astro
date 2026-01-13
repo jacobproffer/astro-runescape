@@ -1,0 +1,15 @@
+---
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<div class="p-4 bg-navy-100 outline outline-gray -outline-offset-1">
+  <h2
+    class="text-3xl max-md:text-2xl text-yellow font-cinzel uppercase font-bold"
+  >
+    {text}
+  </h2>
+</div>

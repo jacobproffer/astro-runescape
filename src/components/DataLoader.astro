@@ -9,9 +9,13 @@
  * @prop {string} characterName - The RuneScape character name to fetch data for
  */
 import LoadingSpinner from "@components/LoadingSpinner.astro";
+import Section from "@components/Section.astro";
 import Container from "@components/Container.astro";
 import Divider from "@components/Divider.astro";
 import Hero from "@components/Hero.astro";
+import SecondaryHeadline from "@components/SecondaryHeadline.astro";
+import StatsListItem from "@components/StatsListItem.astro";
+import TableHeading from "./TableHeading.astro";
 import { SKILL_NAMES } from "@/types/runescape";
 
 const { characterName } = Astro.props;
@@ -40,77 +44,44 @@ const heroTitle = `${characterName}'s RuneScape Overview`;
     <Container>
       <Hero headline={heroTitle} />
       <!-- Player Stats -->
-      <section class="relative mx-2 bg-navy-200" id="player-stats-section">
+      <Section id="player-stats-section">
         <Divider loading="eager" />
-        <div class="p-4 bg-navy-100 outline outline-gray -outline-offset-1">
-          <h2
-            class="text-3xl max-md:text-2xl font-cinzel font-bold uppercase text-yellow"
-          >
-            Stats
-          </h2>
-        </div>
+        <SecondaryHeadline text="Character Stats" />
         <ul class="grid grid-cols-1 md:grid-cols-5 gap-0.75 pt-0.75 bg-black">
-          <li class="p-4 bg-navy-200 outline outline-gray -outline-offset-1">
-            <h3 class="text-yellow text-lg font-bold">Combat Level</h3>
-            <div class="text-gray-300" id="stat-combat-level">0</div>
-          </li>
-          <li class="p-4 bg-navy-200 outline outline-gray -outline-offset-1">
-            <h3 class="text-yellow text-lg font-bold">Total Level</h3>
-            <div class="text-gray-300" id="stat-total-level">0</div>
-          </li>
-          <li class="p-4 bg-navy-200 outline outline-gray -outline-offset-1">
-            <h3 class="text-yellow text-lg font-bold">Total XP</h3>
-            <div class="text-gray-300" id="stat-total-xp">0</div>
-          </li>
-          <li class="p-4 bg-navy-200 outline outline-gray -outline-offset-1">
-            <h3 class="text-yellow text-lg font-bold">Quests Complete</h3>
-            <div class="text-gray-300" id="stat-quests">0</div>
-          </li>
-          <li class="p-4 bg-navy-200 outline outline-gray -outline-offset-1">
-            <h3 class="text-yellow text-lg font-bold">Rank</h3>
-            <div class="text-gray-300" id="stat-rank">N/A</div>
-          </li>
+          <StatsListItem title="Combat Level" stat="0" id="stat-combat-level" />
+          <StatsListItem title="Total Level" stat="0" id="stat-total-level" />
+          <StatsListItem title="Total XP" stat="0" id="stat-total-xp" />
+          <StatsListItem title="Quests Complete" stat="0" id="stat-quests" />
+          <StatsListItem title="Rank" stat="N/A" id="stat-rank" />
         </ul>
         <Divider loading="eager" />
-      </section>
+      </Section>
 
       <!-- Skills Table -->
-      <section class="bg-black mx-2" id="skills-section">
-        <div class="p-4 bg-navy-100 outline outline-gray -outline-offset-1">
-          <h2
-            class="text-3xl max-md:text-2xl text-yellow font-cinzel uppercase font-bold"
-          >
-            Skills
-          </h2>
-        </div>
+      <Section id="skills-section">
+        <SecondaryHeadline text="Skills" />
         <div class="overflow-x-auto -mb-0.75">
           <table class="w-full border-separate border-spacing-y-0.75">
             <thead>
               <tr class="bg-navy-200 outline outline-gray -outline-offset-1">
-                <th class="text-yellow text-lg text-left py-3 px-4">Skill</th>
-                <th class="text-yellow text-lg text-right py-3 px-4">Level</th>
-                <th class="text-yellow text-lg text-right py-3 px-4">XP</th>
-                <th class="text-yellow text-lg text-right py-3 px-4">Rank</th>
+                <TableHeading text="Skill" position="left" />
+                <TableHeading text="Level" position="right" />
+                <TableHeading text="XP" position="right" />
+                <TableHeading text="Rank" position="right" />
               </tr>
             </thead>
             <tbody id="skills-tbody"></tbody>
           </table>
         </div>
         <Divider loading="lazy" />
-      </section>
+      </Section>
 
       <!-- Recent Activities -->
       <section
-        class="flex flex-col gap-0.75 bg-black mx-2"
+        class="flex flex-col gap-0.75 relative bg-black mx-2"
         id="activities-section"
       >
-        <div class="p-4 bg-navy-200 outline outline-gray -outline-offset-1">
-          <h2
-            class="text-yellow text-3xl max-md:text-2xl font-cinzel font-bold uppercase"
-          >
-            Recent Activities
-          </h2>
-        </div>
+        <SecondaryHeadline text="Recent Activities" />
         <ol class="flex flex-col gap-0.75" id="activities-list"></ol>
       </section>
     </Container>

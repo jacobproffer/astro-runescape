@@ -6,13 +6,9 @@ interface Props {
 const { headline } = Astro.props;
 ---
 
-<section class="relative bg-navy-200 overflow-hidden">
+<section class="relative overflow-hidden">
   <div
-    class="relative z-10 w-full h-4 border-b border-solid border-gray shadow-vertical-hard"
-  >
-  </div>
-  <div
-    class="pt-6 pb-4 px-6 bg-navy-100 outline outline-gray -outline-offset-1"
+    class="pt-6 pb-4 px-6 mx-1 bg-navy-100 outline outline-gray -outline-offset-1 rounded-t-md"
   >
     {
       headline && (
@@ -23,5 +19,5 @@ const { headline } = Astro.props;
     }
   </div>
   <slot />
-  <div class="w-full h-4 shadow-vertical-hard"></div>
+  <div class="w-full h-4 bg-navy-200 shadow-vertical-hard"></div>
 </section>
