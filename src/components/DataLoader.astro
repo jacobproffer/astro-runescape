@@ -42,7 +42,7 @@ const heroTitle = `${characterName}'s RuneScape Overview`;
 
   <div id="content-state" class="hidden">
     <Container>
-      <Hero headline={heroTitle} />
+      <Hero headline={heroTitle} id="hero-title" />
       <!-- Player Stats -->
       <Section id="player-stats-section">
         <Divider loading="eager" />
@@ -90,6 +90,13 @@ const heroTitle = `${characterName}'s RuneScape Overview`;
 
 <script define:vars={{ characterName, SKILL_NAMES }}>
   async function loadPlayerData() {
+    // Check if the data-loader component exists on this page
+    const dataLoaderElement = document.getElementById("data-loader");
+    if (!dataLoaderElement) {
+      // Component not on this page, exit silently
+      return;
+    }
+
     const loadingState = document.getElementById("loading-state");
     const contentState = document.getElementById("content-state");
     const errorState = document.getElementById("error-state");
@@ -119,7 +126,9 @@ const heroTitle = `${characterName}'s RuneScape Overview`;
       // Update Hero
       const heroTitle = document.getElementById("hero-title");
       if (heroTitle) {
-        heroTitle.textContent = data.name || characterName;
+        heroTitle.textContent = data.name
+          ? `${data.name}'s RuneScape Overview`
+          : `${characterName}'s RuneScape Overview`;
       } else {
         console.warn("Hero title element not found");
       }
