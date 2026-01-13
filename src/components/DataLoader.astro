@@ -15,7 +15,7 @@ import Divider from "@components/Divider.astro";
 import Hero from "@components/Hero.astro";
 import SecondaryHeadline from "@components/SecondaryHeadline.astro";
 import StatsListItem from "@components/StatsListItem.astro";
-import TableHeading from "./TableHeading.astro";
+import TableHeading from "@components/TableHeading.astro";
 import { SKILL_NAMES } from "@/types/runescape";
 
 const { characterName } = Astro.props;
@@ -300,7 +300,8 @@ const heroTitle = `${characterName}'s RuneScape Overview`;
             contentDiv.className = "flex flex-col gap-1";
 
             const heading = document.createElement("h3");
-            heading.className = "text-yellow font-semibold text-lg";
+            heading.className =
+              "text-yellow text-shadow-sm text-shadow-black font-semibold text-lg";
             heading.textContent = formattedText;
 
             const details = document.createElement("p");

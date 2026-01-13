@@ -33,7 +33,9 @@ const { characterName } = Astro.props;
             format="webp"
           />
         </div>
-        <span class="font-bold">{characterName || "Apone"}</span>
+        <span class="font-bold text-shadow-sm text-shadow-black"
+          >{characterName || "Apone"}</span
+        >
       </a>
     </header>
     <nav
@@ -45,7 +47,7 @@ const { characterName } = Astro.props;
       >
         <li class="h-full">
           <a
-            class="flex flex-col justify-center h-full border-l border-r border-r-black border-l-gray-dark border-solid py-4 px-8 text-center font-bold text-yellow hover:text-cream hover:bg-black focus:outline focus:outline-dashed focus:outline-yellow focus:-outline-offset-1 transition-colors"
+            class="flex flex-col justify-center h-full border-l border-r border-r-black border-l-gray-dark border-solid py-4 px-8 text-center font-bold text-yellow text-shadow-sm text-shadow-black hover:text-cream hover:bg-black focus:outline focus:outline-dashed focus:outline-yellow focus:-outline-offset-1 transition-colors"
             href="/blog">Blog</a
           >
         </li>
