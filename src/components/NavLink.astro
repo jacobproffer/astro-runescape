@@ -1,0 +1,25 @@
+---
+interface Props {
+  class?: string;
+  heightFull: boolean;
+  [key: string]: any;
+}
+
+const url = new URL(Astro.props.href, Astro.url);
+const isExternal = url.host !== Astro.url.host;
+const isCurrent = url.href === Astro.url.href;
+
+const { class: className, heightFull, ...otherProps } = Astro.props;
+---
+
+<a
+  class:list={[
+    "flex flex-col justify-center " +
+      (heightFull ? "h-full " : "") +
+      "border-l border-r border-r-black border-l-gray-dark border-solid py-4 px-8 text-center font-bold text-yellow text-shadow-sm text-shadow-black hover:text-cream hover:bg-black focus:outline focus:outline-dashed focus:outline-yellow focus:-outline-offset-1 transition-colors",
+    className,
+  ]}
+  aria-current={isCurrent ? "page" : null}
+  target={isExternal ? "_blank" : "_self"}
+  {...otherProps}><slot /></a
+>

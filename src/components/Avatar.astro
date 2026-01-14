@@ -1,0 +1,37 @@
+---
+import { Image } from "astro:assets";
+
+interface Props {
+  image: ImageMetadata;
+  characterName?: string;
+  loading?: "eager" | "lazy";
+}
+
+const { image, characterName } = Astro.props;
+---
+
+<a
+  class="flex items-center gap-4 text-yellow hover:text-cream focus:outline focus:outline-dashed focus:outline-yellow focus:-outline-offset-1 transition-colors"
+  href="/"
+  aria-label="Go to home page"
+>
+  <div
+    class="relative aspect-square rounded-full bg-black border border-gray-darker border-solid"
+  >
+    <Image
+      class="block w-full h-full object-cover object-bottom-right rounded-full"
+      src={image}
+      alt=""
+      loading={Astro.props.loading || "eager"}
+      width={128}
+      height={128}
+      widths={[64, 128, 256]}
+      sizes="64px"
+      quality={80}
+      format="webp"
+    />
+  </div>
+  <span class="font-bold text-shadow-sm text-shadow-black"
+    >{characterName || "Apone"}</span
+  >
+</a>

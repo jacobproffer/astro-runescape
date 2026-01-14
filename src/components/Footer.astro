@@ -1,14 +1,15 @@
 ---
 import { Image } from "astro:assets";
 import border from "@assets/img/border.jpg";
+import Container from "@components/Container.astro";
 ---
 
 <footer class="relative z-20 mt-1 bg-tan">
   <Image class="block w-full" src={border} alt="" loading="lazy" />
-  <div class="container mx-auto py-2 px-4">
-    <p class="text-sm text-navy-300">
+  <Container topSpacing={false}>
+    <p class="py-4 text-sm text-navy-300">
       This site is built by Jacob Proffer using Astro, Tailwind CSS, TypeScript,
       and the RuneMetrics API.
     </p>
-  </div>
+  </Container>
 </footer>

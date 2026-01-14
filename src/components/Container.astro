@@ -1,3 +1,12 @@
-<div class="container mx-auto px-4 pt-12">
+---
+interface Props {
+  topSpacing?: boolean;
+}
+
+const { topSpacing = true } = Astro.props;
+const topPaddingClass = topSpacing ? "pt-12" : "";
+---
+
+<div class={`container mx-auto px-4 ${topPaddingClass}`}>
   <slot />
 </div>
