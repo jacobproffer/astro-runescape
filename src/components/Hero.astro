@@ -1,4 +1,6 @@
 ---
+import ContentBox from "@components/ContentBox.astro";
+
 interface Props {
   headline: string;
   id?: string;
@@ -8,20 +10,18 @@ const { headline, id } = Astro.props;
 ---
 
 <section class="relative overflow-hidden">
-  <div
-    class="pt-6 pb-4 px-6 mx-1 bg-navy-100 outline outline-gray -outline-offset-1 rounded-t-md"
-  >
+  <ContentBox background="navy-100" class="py-4 px-4 mx-2 rounded-t-md">
     {
       headline && (
         <h1
-          class="text-4xl max-md:text-2xl font-cinzel font-bold uppercase text-yellow text-balance text-shadow-sm text-shadow-black"
+          class="text-4xl max-md:text-3xl font-cinzel font-bold uppercase text-yellow text-balance text-shadow-sm text-shadow-black"
           id={id}
         >
           {headline}
         </h1>
       )
     }
-  </div>
+  </ContentBox>
   <slot />
   <div class="w-full h-4 bg-navy-200 shadow-vertical-hard"></div>
 </section>

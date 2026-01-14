@@ -7,6 +7,7 @@ import Divider from "@components/Divider.astro";
 import Section from "@components/Section.astro";
 import Container from "@components/Container.astro";
 import Hero from "@components/Hero.astro";
+import BlogCard from "@components/BlogCard.astro";
 import banner from "@assets/img/blog-banner.jpg";
 
 const allPosts = await getCollection(
@@ -34,7 +35,7 @@ const pageDescription = "Read the latest RuneScape adventures and guides";
   <Container>
     <Hero headline={heroTitle} />
     <Section id="blog">
-      <Divider />
+      <Divider loading="eager" />
       {
         sortedPosts.length === 0 ? (
           <div class="text-center py-12">
@@ -46,34 +47,7 @@ const pageDescription = "Read the latest RuneScape adventures and guides";
           <ul class="grid gap-8 md:grid-cols-2 bg-navy-100">
             {sortedPosts.map((post: CollectionEntry<"blog">) => (
               <li>
-                <article class="bg-navy-200 border border-gray-dark p-4 hover:border-yellow transition-colors">
-                  <a href={`/blog/${post.slug}`} class="block group">
-                    <h2 class="text-2xl font-bold text-yellow text-shadow-sm text-shadow-black font-cinzel mb-2 group-hover:text-cream transition-colors">
-                      {post.data.title}
-                    </h2>
-                    <time
-                      datetime={post.data.pubDate.toISOString()}
-                      class="text-sm text-gray-300 block mb-3"
-                    >
-                      {post.data.pubDate.toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        timeZone: "America/New_York",
-                      })}
-                    </time>
-                    <p class="text-cream mb-4">{post.data.description}</p>
-                    {post.data.tags && post.data.tags.length > 0 && (
-                      <div class="flex flex-wrap gap-2">
-                        {post.data.tags.map((tag: string) => (
-                          <span class="text-xs px-2 py-1 bg-navy-300 text-yellow rounded">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </a>
-                </article>
+                <BlogCard post={post} />
               </li>
             ))}
           </ul>

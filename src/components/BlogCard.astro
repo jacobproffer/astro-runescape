@@ -1,0 +1,37 @@
+---
+import type { CollectionEntry } from "astro:content";
+import TagList from "@components/TagList.astro";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+---
+
+<article
+  class="bg-navy-200 border border-gray-dark p-4 hover:border-yellow transition-colors"
+>
+  <a href={`/blog/${post.slug}`} class="block group">
+    <h2
+      class="text-2xl font-bold text-yellow text-shadow-sm text-shadow-black font-cinzel mb-2 group-hover:text-cream transition-colors"
+    >
+      {post.data.title}
+    </h2>
+    <time
+      datetime={post.data.pubDate.toISOString()}
+      class="text-lg text-yellow text-shadow-black block mb-3"
+    >
+      {
+        post.data.pubDate.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          timeZone: "America/New_York",
+        })
+      }
+    </time>
+    <p class="text-gray-300 mb-4">{post.data.description}</p>
+    <TagList tags={post.data.tags} variant="small" />
+  </a>
+</article>
