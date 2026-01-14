@@ -9,12 +9,14 @@ interface Props {
 const { image = banner } = Astro.props;
 ---
 
-<div class="absolute inset-0 -z-1 w-full h-90">
+<div class="absolute inset-0 -z-1 w-full h-90 bg-black">
   <Image
     class="block w-full h-full object-cover object-center-right animate-[fadeIn_1.2s_ease-out]"
     src={image}
     alt=""
     loading="eager"
+    width={2560}
+    height={1440}
     widths={[400, 768, 1024, 1280, 1536]}
     sizes="100vw"
     quality={60}
