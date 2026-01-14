@@ -6,6 +6,7 @@ import Container from "@components/Container.astro";
 import Hero from "@components/Hero.astro";
 import Section from "@components/Section.astro";
 import Divider from "@components/Divider.astro";
+import TagList from "@components/TagList.astro";
 import banner from "@assets/img/slug-banner.jpg";
 
 export const prerender = true;
@@ -65,17 +66,7 @@ const { Content } = await entry.render();
               <Content />
             </div>
             <div>
-              {
-                entry.data.tags && entry.data.tags.length > 0 && (
-                  <div class="flex flex-wrap gap-2">
-                    {entry.data.tags.map((tag: string) => (
-                      <span class="text-sm px-3 py-1 bg-navy-200 text-yellow rounded border border-gray-dark">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )
-              }
+              <TagList tags={entry.data.tags} variant="medium" />
             </div>
           </div>
         </div>

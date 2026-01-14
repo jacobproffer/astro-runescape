@@ -1,0 +1,25 @@
+---
+interface Props {
+  tags: string[];
+  variant?: "small" | "medium";
+}
+
+const { tags, variant = "medium" } = Astro.props;
+const sizeClass =
+  variant === "small" ? "text-xs px-2 py-1" : "text-sm px-3 py-1";
+const bgClass = variant === "small" ? "bg-navy-300" : "bg-navy-200";
+---
+
+{
+  tags && tags.length > 0 && (
+    <div class="flex flex-wrap gap-2">
+      {tags.map((tag: string) => (
+        <span
+          class={`${sizeClass} ${bgClass} text-yellow rounded ${variant === "medium" ? "border border-gray-dark" : ""}`}
+        >
+          {tag}
+        </span>
+      ))}
+    </div>
+  )
+}
