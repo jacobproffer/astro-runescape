@@ -3,7 +3,10 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import Banner from "@components/Banner.astro";
 import Container from "@components/Container.astro";
 import Hero from "@components/Hero.astro";
+import Section from "@components/Section.astro";
+import Divider from "@components/Divider.astro";
 import banner from "@assets/img/404-banner.jpg";
+import SecondaryHeadline from "@components/SecondaryHeadline.astro";
 const pageTitle = "404";
 ---
 
@@ -11,5 +14,19 @@ const pageTitle = "404";
   <Banner image={banner} />
   <Container>
     <Hero headline={pageTitle} />
+    <Section id="404-content">
+      <Divider loading="eager" />
+      <SecondaryHeadline text="Page Not Found" />
+      <div class="p-4 bg-navy-200">
+        <p class="text-gray-300">
+          Sorry, the page you are looking for does not exist. If you feel this
+          is an error, please create an issue on the <a
+            class="text-yellow underline hover:text-cream focus:outline focus:outline-dashed focus:outline-yellow focus:-outline-offset-1 transition-colors"
+            href="https://github.com/jacobproffer/astro-runescape/issues"
+            >GitHub repository</a
+          >.
+        </p>
+      </div>
+    </Section>
   </Container>
 </BaseLayout>

@@ -19,7 +19,7 @@ import TableHeading from "@components/TableHeading.astro";
 import { SKILL_NAMES } from "@/types/runescape";
 
 const { characterName } = Astro.props;
-const heroTitle = `${characterName}'s RuneScape Overview`;
+const heroTitle = `${characterName}'s RuneScape Character Overview`;
 ---
 
 <div id="data-loader">
@@ -33,7 +33,7 @@ const heroTitle = `${characterName}'s RuneScape Overview`;
         <div
           class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"
         >
-          <strong class="font-bold">Error:</strong>
+          <h2 class="font-bold">Error:</h2>
           <span class="block sm:inline" id="error-message"></span>
         </div>
       </Container>
@@ -59,7 +59,7 @@ const heroTitle = `${characterName}'s RuneScape Overview`;
 
       <!-- Skills Table -->
       <Section id="skills-section">
-        <SecondaryHeadline text="Skills" />
+        <SecondaryHeadline text="Character Skills" />
         <div class="overflow-x-auto -mb-0.75">
           <table class="w-full border-separate border-spacing-y-0.75">
             <thead>
@@ -127,8 +127,8 @@ const heroTitle = `${characterName}'s RuneScape Overview`;
       const heroTitle = document.getElementById("hero-title");
       if (heroTitle) {
         heroTitle.textContent = data.name
-          ? `${data.name}'s RuneScape Overview`
-          : `${characterName}'s RuneScape Overview`;
+          ? `${data.name}'s RuneScape Character Overview`
+          : `${characterName}'s RuneScape Character Overview`;
       } else {
         console.warn("Hero title element not found");
       }
