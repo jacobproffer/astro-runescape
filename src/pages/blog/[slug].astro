@@ -41,7 +41,7 @@ const { Content } = await entry.render();
       <Hero headline={entry.data.title} />
 
       <Section id="blog-content">
-        <Divider />
+        <Divider loading="eager" />
         <div class="bg-navy-100">
           <p
             class="p-4 text-yellow text-lg bg-navy-100 outline outline-gray -outline-offset-1 text-shadow-sm text-shadow-black"

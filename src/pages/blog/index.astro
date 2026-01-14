@@ -34,7 +34,7 @@ const pageDescription = "Read the latest RuneScape adventures and guides";
   <Container>
     <Hero headline={heroTitle} />
     <Section id="blog">
-      <Divider />
+      <Divider loading="eager" />
       {
         sortedPosts.length === 0 ? (
           <div class="text-center py-12">
