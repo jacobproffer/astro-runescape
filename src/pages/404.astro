@@ -5,6 +5,7 @@ import Container from "@components/Container.astro";
 import Hero from "@components/Hero.astro";
 import Section from "@components/Section.astro";
 import Divider from "@components/Divider.astro";
+import ContentBox from "@components/ContentBox.astro";
 import banner from "@assets/img/404-banner.jpg";
 import SecondaryHeadline from "@components/SecondaryHeadline.astro";
 const pageTitle = "404";
@@ -18,7 +19,7 @@ const pageTitle = "404";
       <Divider loading="eager" />
       <div class="flex flex-col gap-0.75">
         <SecondaryHeadline text="Page Not Found" />
-        <div class="p-4 bg-navy-200 outline outline-gray -outline-offset-1">
+        <ContentBox>
           <p class="text-gray-300">
             Sorry, the page you are looking for does not exist. If you feel this
             is an error, please create an issue on the <a
@@ -27,7 +28,7 @@ const pageTitle = "404";
               >GitHub repository</a
             >.
           </p>
-        </div>
+        </ContentBox>
       </div>
     </Section>
   </Container>
