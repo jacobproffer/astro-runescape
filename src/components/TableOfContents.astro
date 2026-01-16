@@ -1,0 +1,44 @@
+---
+export interface Props {
+  headings: Array<{
+    depth: number;
+    slug: string;
+    text: string;
+  }>;
+}
+
+const { headings } = Astro.props;
+
+// Filter to only show h2 and h3 headings
+const tocHeadings = headings.filter((h) => h.depth <= 3);
+---
+
+{
+  tocHeadings.length > 0 && (
+    <nav class="table-of-contents" aria-label="Table of Contents">
+      <h3 class="text-yellow text-xl font-cinzel font-bold mb-3 text-shadow-sm text-shadow-black">
+        On This Page
+      </h3>
+      <ul class="space-y-2">
+        {tocHeadings.map((heading) => (
+          <li
+            class:list={[
+              "leading-snug",
+              {
+                "ml-0": heading.depth === 2,
+                "ml-4 text-sm": heading.depth === 3,
+              },
+            ]}
+          >
+            <a
+              href={`#${heading.slug}`}
+              class="text-gray-300 hover:text-yellow transition-colors duration-200 block py-1"
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
