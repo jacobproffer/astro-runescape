@@ -1,0 +1,24 @@
+{
+  "Blog Post": {
+    "scope": "markdown",
+    "prefix": "blogpost",
+    "body": [
+      "---",
+      "title: \"${1:Post Title}\"",
+      "description: \"${2:Post description}\"",
+      "pubDate: ${3:${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}}T${4:12}:${5:00}:${6:00}-05:00",
+      "author: \"${7:Apone}\"",
+      "tags: [\"${8:tag1}\", \"${9:tag2}\"]",
+      "draft: ${10|false,true|}",
+      "---",
+      "",
+      "${11:Your blog post content goes here.}",
+      "",
+      "## ${12:Section Heading}",
+      "",
+      "${0}",
+      "",
+    ],
+    "description": "Create a new blog post with frontmatter",
+  },
+}

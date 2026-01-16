@@ -1,0 +1,12 @@
+{
+  "[markdown]": {
+    "editor.quickSuggestions": {
+      "comments": false,
+      "strings": true,
+      "other": true
+    },
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "editor.tabCompletion": "on",
+    "editor.wordBasedSuggestions": "off"
+  }
+}
