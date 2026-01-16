@@ -61,16 +61,18 @@ const { Content } = await entry.render();
             </time>
             <span>by {entry.data.author}</span>
           </ContentBox>
-          <ContentBox>
-            <div
-              class="max-w-prose text-gray-300 [&_h2]:text-yellow [&_h2]:text-3xl [&_h2]:font-cinzel [&_h2]:uppercase [&_h2]:font-bold [&_h2]:mt-8 [&_h2]:mb-4 [&_h2]:text-shadow-sm [&_h2]:text-shadow-black [&_h3]:text-yellow [&_h3]:font-cinzel [&_h3]:font-bold [&_h3]:mt-6 [&_h3]:mb-3 [&_h3]:text-shadow-sm [&_h3]:text-shadow-black [&_p]:mb-4 [&_p]:leading-7 [&_ul]:ml-6 [&_ul]:mb-4 [&_ul]:list-disc [&_ol]:ml-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_li]:mb-2 [&_li]:leading-7 [&_a]:text-yellow [&_a]:underline hover:[&_a]:text-cream [&_strong]:text-yellow [&_strong]:font-bold [&_code]:bg-navy-300 [&_code]:px-2 [&_code]:py-1 [&_code]:rounded [&_code]:text-sm"
-            >
-              <Content />
-            </div>
-            <div>
+          <div class="grid lg:grid-cols-2 gap-0.75">
+            <ContentBox>
+              <div
+                class="max-w-prose text-gray-300 [&_h2]:text-yellow [&_h2]:text-3xl [&_h2]:font-cinzel [&_h2]:uppercase [&_h2]:font-bold [&_h2]:mt-8 [&_h2]:mb-4 [&_h2]:text-shadow-sm [&_h2]:text-shadow-black [&_h3]:text-yellow [&_h3]:font-cinzel [&_h3]:font-bold [&_h3]:mt-6 [&_h3]:mb-3 [&_h3]:text-shadow-sm [&_h3]:text-shadow-black [&_p]:mb-4 [&_p]:leading-7 [&_ul]:ml-6 [&_ul]:mb-4 [&_ul]:list-disc [&_ol]:ml-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_li]:mb-2 [&_li]:leading-7 [&_a]:text-yellow [&_a]:underline hover:[&_a]:text-cream [&_strong]:text-yellow [&_strong]:font-bold [&_code]:bg-navy-300 [&_code]:px-2 [&_code]:py-1 [&_code]:rounded [&_code]:text-sm"
+              >
+                <Content />
+              </div>
+            </ContentBox>
+            <ContentBox>
               <TagList tags={entry.data.tags} variant="medium" />
-            </div>
-          </ContentBox>
+            </ContentBox>
+          </div>
         </div>
       </Section>
     </Container>
