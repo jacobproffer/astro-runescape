@@ -44,7 +44,7 @@ const pageDescription = "Read the latest RuneScape adventures and guides";
             </p>
           </div>
         ) : (
-          <ul class="grid gap-8 md:grid-cols-2 bg-navy-100">
+          <ul class="grid gap-0.75 md:grid-cols-2 bg-black">
             {sortedPosts.map((post: CollectionEntry<"blog">) => (
               <li>
                 <BlogCard post={post} />
