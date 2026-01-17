@@ -16,9 +16,9 @@ const tocHeadings = headings.filter((h) => h.depth <= 3);
 {
   tocHeadings.length > 0 && (
     <nav class="table-of-contents" aria-label="Table of Contents">
-      <h3 class="text-yellow text-xl font-cinzel font-bold mb-3 text-shadow-sm text-shadow-black">
+      <h2 class="text-yellow text-xl font-cinzel font-bold mb-3 text-shadow-sm text-shadow-black">
         On This Page
-      </h3>
+      </h2>
       <ul class="space-y-2">
         {tocHeadings.map((heading) => (
           <li
