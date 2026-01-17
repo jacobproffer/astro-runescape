@@ -1,6 +1,7 @@
 ---
 import { SEO, type Props as SEOProps } from "astro-seo";
-const defaultImageFile = new URL("/images/social.jpg", Astro.url);
+const facebookImageFile = new URL("/images/facebook-social.jpg", Astro.url);
+const twitterImageFile = new URL("/images/twitter-social.jpg", Astro.url);
 
 interface Props {
   seo?: SEOProps;
@@ -23,11 +24,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       url: canonicalURL,
       title: seo?.title ?? "Apone",
       type: "website",
-      image: defaultImageFile.toString(),
+      image: facebookImageFile.toString(),
     },
     image: {
-      url: defaultImageFile.toString(),
-      secureUrl: defaultImageFile.toString(),
+      url: facebookImageFile.toString(),
+      secureUrl: facebookImageFile.toString(),
       alt: "",
       height: 1200,
       width: 800,
@@ -46,6 +47,26 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       {
         name: "og:site_name",
         content: siteName,
+      },
+      {
+        name: "twitter:card",
+        content: "summary_large_image",
+      },
+      {
+        name: "twitter:title",
+        content: seo?.title ?? "Apone",
+      },
+      {
+        name: "twitter:description",
+        content: seo?.description ?? siteDescription,
+      },
+      {
+        name: "twitter:image",
+        content: twitterImageFile.toString(),
+      },
+      {
+        name: "twitter:image:alt",
+        content: "Apone, a character in RuneScape, holding a Noxious Staff.",
       },
     ],
   }}
