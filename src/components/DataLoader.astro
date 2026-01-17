@@ -47,7 +47,9 @@ const heroTitle = `${characterName}'s RuneScape Character Overview`;
       <Section id="player-stats-section">
         <Divider loading="eager" />
         <SecondaryHeadline text="Character Stats" />
-        <ul class="grid grid-cols-1 md:grid-cols-5 gap-0.75 pt-0.75 bg-black">
+        <ul
+          class="grid grid-cols-1 md:grid-cols-5 gap-0.75 pt-0.75 mb-0.75 bg-black"
+        >
           <StatsListItem title="Combat Level" stat="0" id="stat-combat-level" />
           <StatsListItem title="Total Level" stat="0" id="stat-total-level" />
           <StatsListItem title="Total XP" stat="0" id="stat-total-xp" />
@@ -115,7 +117,7 @@ const heroTitle = `${characterName}'s RuneScape Character Overview`;
 
     try {
       const response = await fetch(
-        "/api/player-data?username=" + encodeURIComponent(characterName)
+        "/api/player-data?username=" + encodeURIComponent(characterName),
       );
       const data = await response.json();
 
@@ -174,7 +176,7 @@ const heroTitle = `${characterName}'s RuneScape Character Overview`;
       if (skillsTbody && data.skillvalues) {
         skillsTbody.innerHTML = "";
         const sortedSkills = [...data.skillvalues].sort(
-          (a, b) => (b?.xp || 0) / 10 - (a?.xp || 0) / 10
+          (a, b) => (b?.xp || 0) / 10 - (a?.xp || 0) / 10,
         );
 
         sortedSkills.forEach((skill, index) => {
@@ -236,7 +238,7 @@ const heroTitle = `${characterName}'s RuneScape Character Overview`;
           const formatText = (text) =>
             text
               ? text.replace(/(\d{4,})/g, (match) =>
-                  parseInt(match, 10).toLocaleString()
+                  parseInt(match, 10).toLocaleString(),
                 )
               : "";
 
@@ -261,7 +263,7 @@ const heroTitle = `${characterName}'s RuneScape Character Overview`;
                 Dec: 11,
               };
               const match = dateStr.match(
-                /(\d{2})-(\w{3})-(\d{4})\s+(\d{2}):(\d{2})/
+                /(\d{2})-(\w{3})-(\d{4})\s+(\d{2}):(\d{2})/,
               );
               if (match) {
                 const [, day, month, year, hour, minute] = match;
@@ -271,7 +273,7 @@ const heroTitle = `${characterName}'s RuneScape Character Overview`;
                   months[month],
                   parseInt(day),
                   parseInt(hour),
-                  parseInt(minute)
+                  parseInt(minute),
                 );
                 return new Date(timestamp).toISOString();
               }
@@ -289,7 +291,7 @@ const heroTitle = `${characterName}'s RuneScape Character Overview`;
               (isEven ? "bg-navy-100" : "bg-navy-200");
 
             const formattedText = formatText(
-              activity.text || "Unknown activity"
+              activity.text || "Unknown activity",
             );
             const formattedDetails = formatText(activity.details || "");
             const activityDate = activity.date || "";
