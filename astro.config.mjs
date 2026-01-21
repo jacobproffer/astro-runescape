@@ -6,7 +6,7 @@ import netlify from "@astrojs/netlify";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://astro-runescape.netlify.app",
+  site: "https://runescape.proffer.dev/",
   output: "server",
   adapter: netlify(),
   integrations: [sitemap()],
