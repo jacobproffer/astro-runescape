@@ -3,7 +3,7 @@ title: "Achieved 120 Slayer"
 description: "After years of playing RuneScape, I have finally achieved level 120 Slayer."
 pubDate: 2026-01-11T12:00:00-05:00
 author: "Apone"
-tags: ["slayer", "skill", "achievement"]
+tags: ["slayer", "skilling", "achievement"]
 draft: false
 ---
 

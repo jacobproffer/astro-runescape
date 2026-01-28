@@ -3,7 +3,7 @@ title: "Necromancy Pet and Aura Removal Thoughts"
 description: "I found Omen the Necromancy pet while training Necromancy today."
 pubDate: 2026-01-19T12:00:00-05:00
 author: "Apone"
-tags: ["necromancy", "achievement", "skill"]
+tags: ["necromancy", "achievement", "skilling"]
 draft: false
 ---
 

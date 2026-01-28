@@ -1,4 +1,6 @@
 ---
+import ContentBox from "@components/ContentBox.astro";
+
 export interface Props {
   headings: Array<{
     depth: number;
@@ -15,30 +17,32 @@ const tocHeadings = headings.filter((h) => h.depth <= 3);
 
 {
   tocHeadings.length > 0 && (
-    <nav class="table-of-contents" aria-label="Table of Contents">
-      <h2 class="text-yellow text-3xl max-md:text-2xl font-cinzel font-bold mb-3 text-shadow-sm text-shadow-black">
-        On This Page
-      </h2>
-      <ul class="space-y-2">
-        {tocHeadings.map((heading) => (
-          <li
-            class:list={[
-              "leading-snug",
-              {
-                "ml-0": heading.depth === 2,
-                "ml-4 text-sm": heading.depth === 3,
-              },
-            ]}
-          >
-            <a
-              href={`#${heading.slug}`}
-              class="text-gray-300 hover:text-yellow transition-colors duration-200 block py-1"
+    <ContentBox>
+      <nav class="table-of-contents" aria-label="Table of Contents">
+        <h2 class="text-yellow text-3xl max-md:text-2xl font-cinzel font-bold mb-3 text-shadow-sm text-shadow-black">
+          On This Page
+        </h2>
+        <ul class="space-y-2">
+          {tocHeadings.map((heading) => (
+            <li
+              class:list={[
+                "leading-snug",
+                {
+                  "ml-0": heading.depth === 2,
+                  "ml-4 text-sm": heading.depth === 3,
+                },
+              ]}
             >
-              {heading.text}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
+              <a
+                href={`#${heading.slug}`}
+                class="text-gray-300 hover:text-yellow transition-colors duration-200 block py-1"
+              >
+                {heading.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </ContentBox>
   )
 }

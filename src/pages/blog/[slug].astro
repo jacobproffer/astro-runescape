@@ -66,16 +66,14 @@ const { Content, headings } = await entry.render();
             <div
               class="lg:sticky lg:top-0.75 lg:self-start flex flex-col gap-0.75"
             >
-              <ContentBox>
-                <TableOfContents headings={headings} />
-              </ContentBox>
+              <TableOfContents headings={headings} />
               <ContentBox>
                 <h2
                   class="text-yellow text-3xl max-md:text-2xl font-cinzel font-bold mb-3 text-shadow-sm text-shadow-black"
                 >
                   Tags
                 </h2>
-                <TagList tags={entry.data.tags} variant="medium" />
+                <TagList tags={entry.data.tags} />
               </ContentBox>
             </div>
             <ContentBox>

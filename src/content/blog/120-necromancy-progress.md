@@ -3,7 +3,7 @@ title: "120 Necromancy Progress"
 description: "With 120 Slayer completed, I've been focusing on Necromancy."
 pubDate: 2026-01-15T12:00:00-05:00
 author: "Apone"
-tags: ["necromancy", "skill"]
+tags: ["necromancy", "skilling"]
 draft: false
 ---
 

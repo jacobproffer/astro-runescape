@@ -10,14 +10,14 @@ interface Props {
 const { post } = Astro.props;
 ---
 
-<article class="bg-navy-200">
+<article class="bg-navy-200 h-full">
   <a
     href={`/blog/${post.slug}`}
-    class="flex flex-col gap-0.75 border border-gray-dark hover:border-yellow transition-colors bg-black group"
+    class="flex flex-col gap-0.75 h-full border border-gray-dark hover:border-yellow transition-colors bg-black group"
   >
     <SecondaryHeadline text={post.data.title} />
     <div
-      class="flex flex-col gap-4 p-4 border-t border-solid border-gray bg-navy-200"
+      class="flex flex-col gap-4 h-full p-4 border-t border-solid border-gray bg-navy-200"
     >
       <time
         datetime={post.data.pubDate.toISOString()}
@@ -33,7 +33,7 @@ const { post } = Astro.props;
         }
       </time>
       <p class="text-gray-300">{post.data.description}</p>
-      <TagList tags={post.data.tags} variant="small" />
+      <TagList tags={post.data.tags} />
     </div>
   </a>
 </article>
