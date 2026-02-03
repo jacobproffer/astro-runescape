@@ -1,0 +1,16 @@
+---
+interface Props {
+  text?: string;
+}
+
+const { text = "Image\nComing Soon" } = Astro.props;
+---
+
+<div
+  class="aspect-square bg-navy-300 border-2 border-dashed border-gray rounded flex items-center justify-center"
+>
+  <p
+    class="text-gray text-xs text-center font-cinzel"
+    set:html={text.replace("\n", "<br />")}
+  />
+</div>

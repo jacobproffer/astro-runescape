@@ -2,13 +2,18 @@
 interface Props {
   class?: string;
   background?: "navy-100" | "navy-200";
+  fullHeight?: boolean;
 }
 
-const { class: className, background = "navy-200" } = Astro.props;
+const {
+  class: className,
+  background = "navy-200",
+  fullHeight = false,
+} = Astro.props;
 ---
 
 <div
-  class={`p-4 bg-${background} outline outline-gray -outline-offset-1 ${className || ""}`}
+  class={`p-4 bg-${background} outline outline-gray -outline-offset-1 ${fullHeight ? "h-full" : ""} ${className || ""}`}
 >
   <slot />
 </div>

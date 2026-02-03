@@ -1,0 +1,96 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Banner from "@components/Banner.astro";
+import Container from "@components/Container.astro";
+import Hero from "@components/Hero.astro";
+import Section from "@components/Section.astro";
+import ContentBox from "@components/ContentBox.astro";
+import Divider from "@components/Divider.astro";
+import SecondaryHeadline from "@components/SecondaryHeadline.astro";
+import TimelineItem from "@components/TimelineItem.astro";
+import ImagePlaceholder from "@components/ImagePlaceholder.astro";
+
+const characterName = import.meta.env.PUBLIC_CHARACTER_NAME || "Player";
+const pageTitle = `About ${characterName}`;
+const pageDescription = `Learn more about ${characterName}'s RuneScape journey and adventures`;
+---
+
+<BaseLayout pageTitle={pageTitle} pageDescription={pageDescription}>
+  <Banner />
+  <Container>
+    <Hero headline={`About ${characterName}`} />
+    <Section id="about">
+      <Divider loading="eager" />
+
+      <div class="flex flex-col gap-0.75">
+        <!-- Character Introduction -->
+        <div class="grid lg:grid-cols-[2fr_1fr] gap-0.75">
+          <div class="flex flex-col gap-0.75">
+            <SecondaryHeadline text="The Story" />
+            <ContentBox fullHeight>
+              <div class="text-gray-300 leading-7 space-y-4">
+                <p>
+                  Every adventurer has a story, and this is mine. From humble
+                  beginnings in Lumbridge to facing the greatest challenges
+                  across Gielinor, this journey has been filled with memorable
+                  moments and hard-earned achievements.
+                </p>
+                <p>
+                  Through countless hours of skilling, questing, and combat,
+                  I've grown from a novice explorer into a seasoned veteran of
+                  the realm. Each milestone represents not just numbers on a
+                  screen, but memories of adventures, challenges overcome, and
+                  friendships forged.
+                </p>
+              </div>
+            </ContentBox>
+          </div>
+
+          <!-- Character Image Placeholder -->
+          <ContentBox background="navy-100">
+            <ImagePlaceholder text="Character Image\nComing Soon" />
+          </ContentBox>
+        </div>
+
+        <!-- Timeline -->
+        <div class="flex flex-col gap-0.75">
+          <SecondaryHeadline text="Journey Timeline" />
+          <ContentBox>
+            <div class="relative">
+              <div class="absolute left-0 top-0 bottom-0 w-1 bg-yellow"></div>
+              <ol class="relative list-none m-0 p-0">
+                <TimelineItem
+                  title="The Beginning"
+                  description="Started my adventure in the world of Gielinor. First steps in Lumbridge marked the beginning of an epic journey."
+                />
+                <TimelineItem
+                  title="First 99"
+                  description="Achieved my first level 99 skill, a major milestone that opened up new possibilities and showcased dedication to mastery."
+                />
+                <TimelineItem
+                  title="Quest Cape Earned"
+                  description="Completed all available quests to earn the prestigious Quest Cape, experiencing the rich lore and stories of RuneScape."
+                />
+                <TimelineItem
+                  title="Ongoing Adventures"
+                  description="The journey continues with new goals, boss challenges, and the pursuit of even greater achievements in the ever-evolving world."
+                  isLast={true}
+                />
+              </ol>
+            </div>
+          </ContentBox>
+        </div>
+      </div>
+
+      <!-- Gallery Placeholder -->
+      <div class="flex flex-col gap-0.75">
+        <SecondaryHeadline text="Adventure Gallery" />
+        <ContentBox>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[1, 2, 3, 4].map(() => <ImagePlaceholder />)}
+          </div>
+        </ContentBox>
+      </div>
+    </Section>
+  </Container>
+</BaseLayout>
