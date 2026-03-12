@@ -9,12 +9,12 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/netlify": "^6.6.3",
-    "@astrojs/sitemap": "^3.6.0",
+    "@astrojs/netlify": "^7.0.2",
+    "@astrojs/sitemap": "^3.7.1",
     "@fontsource-variable/cinzel": "^5.2.8",
-    "@tailwindcss/vite": "^4.1.18",
-    "astro": "^5.16.6",
-    "astro-seo": "^0.8.4",
-    "tailwindcss": "^4.1.18"
+    "@tailwindcss/vite": "^4.2.1",
+    "astro": "^6.0.4",
+    "astro-seo": "^1.1.0",
+    "tailwindcss": "^4.2.1"
   }
 }

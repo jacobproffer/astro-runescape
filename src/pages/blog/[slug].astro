@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Banner from "@components/Banner.astro";
 import Container from "@components/Container.astro";
@@ -11,27 +11,15 @@ import TableOfContents from "@components/TableOfContents.astro";
 import ContentBox from "@components/ContentBox.astro";
 import banner from "@assets/img/slug-banner.jpg";
 
-export const prerender = true;
-
-export async function getStaticPaths() {
-  const blogEntries = await getCollection("blog");
-
-  return blogEntries
-    .filter((entry) => entry.data.draft !== true)
-    .map((entry) => ({
-      params: { slug: entry.slug },
-    }));
-}
-
 const { slug } = Astro.params;
 
-const entry = (await getCollection("blog")).find((post) => post.slug === slug);
+const entry = (await getCollection("blog")).find((post) => post.id === slug);
 
-if (!entry) {
-  throw new Error("Blog entry not found");
+if (!entry || entry.data.draft === true) {
+  return Astro.redirect("/404");
 }
 
-const { Content, headings } = await entry.render();
+const { Content, headings } = await render(entry);
 ---
 
 <BaseLayout
