@@ -12,7 +12,7 @@ const { post } = Astro.props;
 
 <article class="bg-navy-200 h-full">
   <a
-    href={`/blog/${post.slug}`}
+    href={`/blog/${post.id}`}
     class="flex flex-col gap-0.75 h-full border border-gray-dark hover:border-yellow focus:outline focus:outline-dashed focus:outline-yellow focus:-outline-offset-1 not-last:transition-colors bg-black group"
   >
     <SecondaryHeadline text={post.data.title} />
