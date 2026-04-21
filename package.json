@@ -13,7 +13,7 @@
     "@astrojs/sitemap": "^3.7.1",
     "@fontsource-variable/cinzel": "^5.2.8",
     "@tailwindcss/vite": "^4.2.1",
-    "astro": "^6.0.4",
+    "astro": "^6.1.8",
     "astro-seo": "^1.1.0",
     "tailwindcss": "^4.2.1"
   }
