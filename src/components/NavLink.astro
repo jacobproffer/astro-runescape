@@ -1,25 +1,26 @@
 ---
 interface Props {
   class?: string;
-  heightFull: boolean;
   [key: string]: any;
 }
 
 const url = new URL(Astro.props.href, Astro.url);
 const isExternal = url.host !== Astro.url.host;
-const isCurrent = url.href === Astro.url.href;
+// Section anchors are never "current"; /blog stays current on /blog/[slug]
+const isCurrent =
+  !url.hash &&
+  (url.pathname === "/"
+    ? Astro.url.pathname === "/"
+    : Astro.url.pathname.startsWith(url.pathname));
 
-const { class: className, heightFull, ...otherProps } = Astro.props;
+const { class: className, ...otherProps } = Astro.props;
 ---
 
 <a
   class:list={[
-    "flex flex-col justify-center " +
-      (heightFull ? "h-full " : "") +
-      "border-l border-r border-r-black border-l-gray-dark border-solid py-4 px-8 text-center font-bold text-yellow text-shadow-sm text-shadow-black hover:text-cream hover:bg-navy-300 focus:outline focus:outline-dashed focus:outline-yellow focus:-outline-offset-1 transition-colors",
-    isCurrent
-      ? "bg-black text-cream border-l-yellow border-r-yellow hover:text-cream hover:bg-navy-300"
-      : "",
+    "relative flex items-center justify-center h-full py-3 md:py-4 px-3 md:px-6 lg:px-8 border-l border-l-gray-dark border-r border-r-black bg-linear-to-b from-navy-100 to-navy-300 shadow-[inset_0_1px_0_rgb(255_255_255/0.08)] font-cinzel font-bold text-sm md:text-base tracking-wide text-yellow text-shadow-sm text-shadow-black hover:text-cream hover:from-gray hover:to-navy-200 focus:outline focus:outline-dashed focus:outline-yellow focus:-outline-offset-1 transition-colors",
+    "after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-yellow after:opacity-0 after:transition-opacity hover:after:opacity-60",
+    isCurrent && "from-black to-navy-300 text-cream after:opacity-100",
     className,
   ]}
   aria-current={isCurrent ? "page" : null}
