@@ -171,6 +171,18 @@ const heroTitle = `${characterName}'s RuneScape Character Overview`;
         console.warn("Rank stat element not found");
       }
 
+      // Update header nameplate
+      const navCombatLevel = document.getElementById("nav-combat-level");
+      if (navCombatLevel && data.combatlevel) {
+        navCombatLevel.textContent = data.combatlevel;
+        navCombatLevel.classList.remove("hidden");
+      }
+
+      const navSubtitle = document.getElementById("nav-subtitle");
+      if (navSubtitle && data.combatlevel && data.totalskill) {
+        navSubtitle.textContent = `Combat ${data.combatlevel} · Total ${data.totalskill.toLocaleString()}`;
+      }
+
       // Populate Skills Table
       const skillsTbody = document.getElementById("skills-tbody");
       if (skillsTbody && data.skillvalues) {
@@ -337,6 +349,11 @@ const heroTitle = `${characterName}'s RuneScape Character Overview`;
       if (loadingState && contentState) {
         loadingState.classList.add("hidden");
         contentState.classList.remove("hidden");
+      }
+
+      // Sections are hidden until data loads, so jump to a nav anchor now
+      if (location.hash) {
+        document.querySelector(location.hash)?.scrollIntoView();
       }
     } catch (error) {
       console.error("Error loading player data:", error);

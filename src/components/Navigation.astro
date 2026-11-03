@@ -3,32 +3,46 @@ import avatar from "@assets/img/avatar.png";
 import Avatar from "@components/Avatar.astro";
 import NavLink from "@components/NavLink.astro";
 
-const { characterName } = Astro.props;
+const characterName = import.meta.env.PUBLIC_CHARACTER_NAME || "Apone";
+
+const links = [
+  { href: "/", label: "Overview" },
+  { href: "/#skills-section", label: "Skills" },
+  { href: "/#activities-section", label: "Activity" },
+  { href: "/blog", label: "Blog" },
+];
 ---
 
-<div class="bg-navy-200 border-t border-b border-solid border-gray-dark">
-  <div
-    class="relative flex items-center justify-between container px-6 mx-auto"
+<header
+  class="relative z-10 bg-linear-to-b from-navy-100 to-navy-300 border-t border-gray-dark shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]"
+>
+  <a
+    class="fixed -top-full left-1/2 -translate-x-1/2 z-50 py-3 px-6 bg-black border border-yellow font-bold text-yellow transition-[top] ease-in-out delay-150 focus:top-4 focus:outline focus:outline-dashed focus:outline-yellow focus:-outline-offset-1"
+    href="#content">Skip to main content</a
   >
-    <header class="my-2">
-      <NavLink
-        class="fixed -top-full left-1/2 -translate-x-1/2 transition-top ease-in-out delay-150 focus:top-4"
-        heightFull={false}
-        href="#content">Skip to main content</NavLink
-      >
+  <div
+    class="container mx-auto px-6 flex max-md:flex-col md:items-stretch md:justify-between"
+  >
+    <div class="py-2.5">
       <Avatar image={avatar} characterName={characterName} />
-    </header>
-    <nav
-      class="absolute top-1/2 right-6 h-full -translate-y-1/2"
-      aria-label="primary"
-    >
+    </div>
+    <nav class="max-md:-mx-6" aria-label="primary">
       <ul
-        class="flex items-center max-w-max h-full border-r border-r-gray-dark"
+        class="flex h-full max-md:border-t max-md:border-gray-dark md:border-r md:border-r-gray-dark"
       >
-        <li class="h-full">
-          <NavLink href="/blog" heightFull={true}>Blog</NavLink>
-        </li>
+        {
+          links.map((link) => (
+            <li class="max-md:flex-1">
+              <NavLink href={link.href}>{link.label}</NavLink>
+            </li>
+          ))
+        }
       </ul>
     </nav>
   </div>
-</div>
+  <div
+    class="h-0.5 bg-linear-to-r from-gold-dark via-yellow to-gold-dark shadow-[0_1px_0_var(--color-black),0_4px_8px_rgb(0_0_0/0.6)]"
+    aria-hidden="true"
+  >
+  </div>
+</header>
