@@ -1,13 +1,97 @@
 import type { APIRoute } from "astro";
+import { SKILLS, type PlayerProfile, type SkillValue } from "@/types/runescape";
+
+// RuneScape Platform APIs (https://developer.runescape.com/platform/).
+// No API key needed; Jagex asks for a descriptive User-Agent.
+const ADVENTURERS_LOG = "https://secure.runescape.com/m=adventurers-log/api/v1";
+const HISCORES = "https://secure.runescape.com/m=hiscore/index_lite.json";
+const USER_AGENT = "astro-runescape character site (github.com/jacobproffer/astro-runescape)";
+
+const platformFetch = (url: string, signal: AbortSignal) =>
+  fetch(url, { signal, headers: { "User-Agent": USER_AGENT, Accept: "application/json" } });
+
+// RS3 combat level: floor((1.3 * max(Att+Str, 2Mag, 2Rng, 2Necro) + Def + Const
+// + floor(Pray/2) + floor(Summ/2)) / 4), with each level capped at 99.
+const computeCombatLevel = (levels: Record<string, number>): number => {
+  const l = (key: string) => Math.min(levels[key] ?? 1, 99);
+  const offence = Math.max(
+    l("attack") + l("strength"),
+    2 * l("magic"),
+    2 * l("ranged"),
+    2 * l("necromancy")
+  );
+  return Math.floor(
+    (1.3 * offence +
+      l("defence") +
+      Math.max(l("hitpoints"), 10) +
+      Math.floor(l("prayer") / 2) +
+      Math.floor(l("summoning") / 2)) /
+      4
+  );
+};
+
+// Map the Platform API responses onto the profile shape the site renders
+const buildProfile = (
+  fallbackName: string,
+  playerData: any,
+  events: any,
+  hiscores: any
+): PlayerProfile => {
+  const skills = playerData.skills && typeof playerData.skills === "object" ? playerData.skills : {};
+  const hiscoreSkills: any[] = Array.isArray(hiscores?.skills) ? hiscores.skills : [];
+  const rankByName = new Map<string, number>(
+    hiscoreSkills.map((s) => [String(s?.name ?? "").toLowerCase(), Number(s?.rank ?? -1)])
+  );
+
+  const levels: Record<string, number> = {};
+  const skillvalues: SkillValue[] = SKILLS.map((skill) => {
+    const entry = skills[skill.key] ?? {};
+    const level = Number(entry.level) || 1;
+    levels[skill.key] = level;
+    return {
+      id: skill.id,
+      level,
+      xp: Number(entry.fine_xp) || 0,
+      rank: rankByName.get(skill.hiscore.toLowerCase()) ?? -1,
+    };
+  });
+
+  const quests: any[] =
+    playerData.quests && typeof playerData.quests === "object"
+      ? Object.values(playerData.quests)
+      : [];
+  const countQuests = (status: string) => quests.filter((q) => q?.status === status).length;
+
+  const overallRank = rankByName.get("overall");
+
+  return {
+    name: typeof playerData.name === "string" ? playerData.name : fallbackName,
+    combatlevel: computeCombatLevel(levels),
+    totalskill: skillvalues.reduce((sum, s) => sum + s.level, 0),
+    totalxp: Math.floor(skillvalues.reduce((sum, s) => sum + s.xp, 0) / 10),
+    questscomplete: countQuests("COMPLETED"),
+    questsstarted: countQuests("STARTED"),
+    questsnotstarted: countQuests("NOT_STARTED"),
+    questpoints: Number(playerData.qp) || 0,
+    rank: overallRank && overallRank > 0 ? overallRank.toLocaleString("en-US") : null,
+    skillvalues,
+    activities: (Array.isArray(events?.events) ? events.events : []).map((e: any) => ({
+      date: String(e?.date ?? ""),
+      text: String(e?.text ?? ""),
+      details: String(e?.details ?? "").replace(/\s+/g, " ").trim(),
+      type: String(e?.type ?? ""),
+    })),
+  };
+};
 
 // Simple in-memory cache to reduce external API calls
 interface CacheEntry {
-  data: any;
+  data: PlayerProfile;
   timestamp: number;
 }
 
 const cache = new Map<string, CacheEntry>();
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes (Adventurer's Log itself caches for up to 10)
 
 // Helper to create response headers with CORS and caching
 const createHeaders = (maxAge: number = 300) => ({
@@ -74,57 +158,44 @@ export const GET: APIRoute = async ({ url }) => {
   }
 
   try {
-    // Set up timeout for the entire operation (fetch + JSON parsing)
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
-
-    const response = await fetch(
-      `https://apps.runescape.com/runemetrics/profile/profile?user=${encodeURIComponent(characterName)}&activities=20`,
-      { signal: controller.signal }
-    );
-
-    if (!response.ok) {
-      clearTimeout(timeoutId);
-      return new Response(
-        JSON.stringify({
-          error: `Failed to fetch profile: ${response.statusText}`,
-        }),
-        {
-          status: response.status,
-          headers: createHeaders(60), // Short cache for errors
-        }
-      );
-    }
-
-    // Parse JSON with timeout still active
-    let data;
+    const encoded = encodeURIComponent(characterName);
+    let results: [Response, Response | null, Response | null];
     try {
-      data = await response.json();
-    } catch (jsonError) {
+      // Player Data is required; Player Events and Hiscores are optional extras
+      results = await Promise.all([
+        platformFetch(
+          `${ADVENTURERS_LOG}/playerData/${encoded}?includeSkills=true&includeQuests=true`,
+          controller.signal
+        ),
+        platformFetch(`${ADVENTURERS_LOG}/playerEvents/${encoded}`, controller.signal).catch(
+          () => null
+        ),
+        platformFetch(`${HISCORES}?player=${encoded}`, controller.signal).catch(() => null),
+      ]);
+    } finally {
       clearTimeout(timeoutId);
-      return new Response(
-        JSON.stringify({ error: "Failed to parse API response" }),
-        { status: 500, headers: createHeaders(60) }
-      );
+    }
+    const [dataRes, eventsRes, hiscoreRes] = results;
+
+    const playerData = await dataRes.json().catch(() => null);
+    if (!dataRes.ok || !playerData || typeof playerData !== "object") {
+      const code = playerData?.error;
+      const message =
+        code === "PLAYER_NOT_FOUND"
+          ? `Player "${characterName}" was not found`
+          : `Failed to fetch player data${code ? `: ${code}` : ""}`;
+      return new Response(JSON.stringify({ error: message }), {
+        status: dataRes.ok ? 502 : dataRes.status,
+        headers: createHeaders(60), // Short cache for errors
+      });
     }
 
-    // Clear timeout after successful JSON parsing
-    clearTimeout(timeoutId);
+    const events = eventsRes?.ok ? await eventsRes.json().catch(() => null) : null;
+    const hiscores = hiscoreRes?.ok ? await hiscoreRes.json().catch(() => null) : null;
 
-    // Validate response structure
-    if (!data || typeof data !== "object") {
-      return new Response(
-        JSON.stringify({ error: "Invalid API response structure" }),
-        { status: 500, headers: createHeaders(60) }
-      );
-    }
-
-    // Ensure arrays exist and are valid
-    const profile = {
-      ...data,
-      activities: Array.isArray(data.activities) ? data.activities : [],
-      skillvalues: Array.isArray(data.skillvalues) ? data.skillvalues : [],
-    };
+    const profile = buildProfile(characterName, playerData, events, hiscores);
 
     // Store in cache
     cache.set(cacheKey, {
