@@ -197,7 +197,8 @@ const heroTitle = `${characterName}'s RuneScape Character Overview`;
           const skillName = SKILL_NAMES[skill.id] || "Skill " + skill.id;
           const skillLevel = skill.level || 0;
           const skillXP = Math.floor((skill.xp || 0) / 10).toLocaleString();
-          const skillRank = (skill.rank || 0).toLocaleString();
+          const skillRank =
+            skill.rank > 0 ? skill.rank.toLocaleString() : "N/A";
 
           row.className =
             "text-gray-300 outline outline-gray -outline-offset-1 shadow-vertical-soft " +
@@ -254,46 +255,19 @@ const heroTitle = `${characterName}'s RuneScape Character Overview`;
                 )
               : "";
 
-          // Convert RuneScape date format (DD-MMM-YYYY HH:MM) to ISO 8601
-          const toISODateTime = (dateStr) => {
-            if (!dateStr) return "";
-            try {
-              // Parse format like "09-Jan-2026 14:30"
-              // RuneScape API returns dates in UTC
-              const months = {
-                Jan: 0,
-                Feb: 1,
-                Mar: 2,
-                Apr: 3,
-                May: 4,
-                Jun: 5,
-                Jul: 6,
-                Aug: 7,
-                Sep: 8,
-                Oct: 9,
-                Nov: 10,
-                Dec: 11,
-              };
-              const match = dateStr.match(
-                /(\d{2})-(\w{3})-(\d{4})\s+(\d{2}):(\d{2})/,
-              );
-              if (match) {
-                const [, day, month, year, hour, minute] = match;
-                // Use Date.UTC to create a UTC timestamp
-                const timestamp = Date.UTC(
-                  parseInt(year),
-                  months[month],
-                  parseInt(day),
-                  parseInt(hour),
-                  parseInt(minute),
-                );
-                return new Date(timestamp).toISOString();
-              }
-            } catch (e) {
-              console.warn("Failed to parse date:", dateStr, e);
-            }
-            return "";
+          // Platform API dates are ISO 8601 with timezone info
+          const parseDate = (dateStr) => {
+            const parsed = dateStr ? new Date(dateStr) : null;
+            return parsed && !isNaN(parsed.getTime()) ? parsed : null;
           };
+          const formatDate = (date) =>
+            date.toLocaleString(undefined, {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            });
 
           data.activities.forEach((activity, index) => {
             const isEven = index % 2 === 0;
@@ -306,8 +280,11 @@ const heroTitle = `${characterName}'s RuneScape Character Overview`;
               activity.text || "Unknown activity",
             );
             const formattedDetails = formatText(activity.details || "");
-            const activityDate = activity.date || "";
-            const isoDate = toISODateTime(activityDate);
+            const parsedDate = parseDate(activity.date);
+            const activityDate = parsedDate
+              ? formatDate(parsedDate)
+              : activity.date || "";
+            const isoDate = parsedDate ? parsedDate.toISOString() : "";
 
             // Create elements using DOM methods to prevent XSS
             const contentDiv = document.createElement("div");
