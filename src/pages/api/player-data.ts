@@ -10,22 +10,24 @@ const USER_AGENT = "astro-runescape character site (github.com/jacobproffer/astr
 const platformFetch = (url: string, signal: AbortSignal) =>
   fetch(url, { signal, headers: { "User-Agent": USER_AGENT, Accept: "application/json" } });
 
-// RS3 combat level: floor((1.3 * max(Att+Str, 2Mag, 2Rng, 2Necro) + Def + Const
-// + floor(Pray/2) + floor(Summ/2)) / 4), with each level capped at 99.
+// RS3 combat level (https://runescape.wiki/w/Combat_level):
+// floor((1.3 * max(Att+Str, 2Mag, 2Rng, 2Necro) + Def + Const
+// + floor(Pray/2) + floor(Summ/2)) / 4).
+// Attack, Strength, Ranged, Magic and Necromancy count up to 120; the rest cap at 99 (max 152).
 const computeCombatLevel = (levels: Record<string, number>): number => {
-  const l = (key: string) => Math.min(levels[key] ?? 1, 99);
+  const l = (key: string, cap: number) => Math.min(levels[key] ?? 1, cap);
   const offence = Math.max(
-    l("attack") + l("strength"),
-    2 * l("magic"),
-    2 * l("ranged"),
-    2 * l("necromancy")
+    l("attack", 120) + l("strength", 120),
+    2 * l("magic", 120),
+    2 * l("ranged", 120),
+    2 * l("necromancy", 120)
   );
   return Math.floor(
     (1.3 * offence +
-      l("defence") +
-      Math.max(l("hitpoints"), 10) +
-      Math.floor(l("prayer") / 2) +
-      Math.floor(l("summoning") / 2)) /
+      l("defence", 99) +
+      Math.max(l("hitpoints", 99), 10) +
+      Math.floor(l("prayer", 99) / 2) +
+      Math.floor(l("summoning", 99) / 2)) /
       4
   );
 };
